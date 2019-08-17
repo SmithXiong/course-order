@@ -6,4 +6,4 @@ exports.notEmpty = name => {
       return true
     }
   }
-}
+};

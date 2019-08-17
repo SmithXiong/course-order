@@ -2,7 +2,7 @@ import Mock from 'mockjs'
 import { deepClone } from '../../src/utils/index.js'
 import { asyncRoutes, constantRoutes } from './routes.js'
 
-const routes = deepClone([...constantRoutes, ...asyncRoutes])
+const routes = deepClone([...constantRoutes, ...asyncRoutes]);
 
 const roles = [
   {
@@ -33,7 +33,7 @@ const roles = [
       ]
     }]
   }
-]
+];
 
 export default [
   // mock get all routes form server

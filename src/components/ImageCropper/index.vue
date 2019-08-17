@@ -109,7 +109,7 @@
 
 <script>
 /* eslint-disable */
-'use strict'
+'use strict';
 import request from '@/utils/request'
 import language from './utils/language.js'
 import mimes from './utils/mimes.js'
@@ -197,24 +197,24 @@ export default {
     }
   },
   data() {
-    const that = this
+    const that = this;
     const {
       imgFormat,
       langType,
       langExt,
       width,
       height
-    } = that
-    let isSupported = true
+    } = that;
+    let isSupported = true;
     const allowImgFormat = [
       'jpg',
       'png'
-    ]
-    const tempImgFormat = allowImgFormat.indexOf(imgFormat) === -1 ? 'jpg' : imgFormat
-    const lang = language[langType] ? language[langType] : language['en']
-    const mime = mimes[tempImgFormat]
+    ];
+    const tempImgFormat = allowImgFormat.indexOf(imgFormat) === -1 ? 'jpg' : imgFormat;
+    const lang = language[langType] ? language[langType] : language['en'];
+    const mime = mimes[tempImgFormat];
     // 规范图片格式
-    that.imgFormat = tempImgFormat
+    that.imgFormat = tempImgFormat;
     if (langExt) {
       Object.assign(lang, langExt)
     }
@@ -288,7 +288,7 @@ export default {
     progressStyle() {
       const {
         progress
-      } = this
+      } = this;
       return {
         width: progress + '%'
       }
@@ -298,9 +298,9 @@ export default {
       const {
         scale,
         sourceImgMasking
-      } = this
-      const top = scale.y + sourceImgMasking.y + 'px'
-      const left = scale.x + sourceImgMasking.x + 'px'
+      } = this;
+      const top = scale.y + sourceImgMasking.y + 'px';
+      const left = scale.x + sourceImgMasking.x + 'px';
       return {
         top,
         left,
@@ -320,22 +320,22 @@ export default {
         height,
         ratio,
         sourceImgContainer
-      } = this
-      const sic = sourceImgContainer
-      const sicRatio = sic.width / sic.height // 原图容器宽高比
-      let x = 0
-      let y = 0
-      let w = sic.width
-      let h = sic.height
-      let scale = 1
+      } = this;
+      const sic = sourceImgContainer;
+      const sicRatio = sic.width / sic.height; // 原图容器宽高比
+      let x = 0;
+      let y = 0;
+      let w = sic.width;
+      let h = sic.height;
+      let scale = 1;
       if (ratio < sicRatio) {
-        scale = sic.height / height
-        w = sic.height * ratio
+        scale = sic.height / height;
+        w = sic.height * ratio;
         x = (sic.width - w) / 2
       }
       if (ratio > sicRatio) {
-        scale = sic.width / width
-        h = sic.width / ratio
+        scale = sic.width / width;
+        h = sic.width / ratio;
         y = (sic.height - h) / 2
       }
       return {
@@ -351,11 +351,11 @@ export default {
       const {
         sourceImgMasking,
         sourceImgContainer
-      } = this
-      const sic = sourceImgContainer
-      const sim = sourceImgMasking
-      const w = sim.width == sic.width ? sim.width : (sic.width - sim.width) / 2
-      const h = sim.height == sic.height ? sim.height : (sic.height - sim.height) / 2
+      } = this;
+      const sic = sourceImgContainer;
+      const sim = sourceImgMasking;
+      const w = sim.width == sic.width ? sim.width : (sic.width - sim.width) / 2;
+      const h = sim.height == sic.height ? sim.height : (sic.height - sim.height) / 2;
       return {
         width: w + 'px',
         height: h + 'px'
@@ -367,11 +367,11 @@ export default {
         height,
         ratio,
         previewContainer
-      } = this
-      const pc = previewContainer
-      let w = pc.width
-      let h = pc.height
-      const pcRatio = w / h
+      } = this;
+      const pc = previewContainer;
+      let w = pc.width;
+      let h = pc.height;
+      const pcRatio = w / h;
       if (ratio < pcRatio) {
         w = pc.height * ratio
       }
@@ -399,8 +399,8 @@ export default {
     // 关闭控件
     off() {
       setTimeout(() => {
-        this.$emit('input', false)
-        this.$emit('close')
+        this.$emit('input', false);
+        this.$emit('close');
         if (this.step == 3 && this.loading == 2) {
           this.setStep(1)
         }
@@ -416,13 +416,13 @@ export default {
     /* 图片选择区域函数绑定
      ---------------------------------------------------------------*/
     preventDefault(e) {
-      e.preventDefault()
+      e.preventDefault();
       return false
     },
     handleClick(e) {
       if (this.loading !== 1) {
         if (e.target !== this.$refs.fileinput) {
-          e.preventDefault()
+          e.preventDefault();
           if (document.activeElement !== this.$refs) {
             this.$refs.fileinput.click()
           }
@@ -430,10 +430,10 @@ export default {
       }
     },
     handleChange(e) {
-      e.preventDefault()
+      e.preventDefault();
       if (this.loading !== 1) {
-        const files = e.target.files || e.dataTransfer.files
-        this.reset()
+        const files = e.target.files || e.dataTransfer.files;
+        this.reset();
         if (this.checkFile(files[0])) {
           this.setSourceImg(files[0])
         }
@@ -446,37 +446,37 @@ export default {
         {
           lang,
           maxSize
-        } = that
+        } = that;
       // 仅限图片
       if (file.type.indexOf('image') === -1) {
-        that.hasError = true
-        that.errorMsg = lang.error.onlyImg
+        that.hasError = true;
+        that.errorMsg = lang.error.onlyImg;
         return false
       }
       // 超出大小
       if (file.size / 1024 > maxSize) {
-        that.hasError = true
-        that.errorMsg = lang.error.outOfSize + maxSize + 'kb'
+        that.hasError = true;
+        that.errorMsg = lang.error.outOfSize + maxSize + 'kb';
         return false
       }
       return true
     },
     // 重置控件
     reset() {
-      const that = this
-      that.loading = 0
-      that.hasError = false
-      that.errorMsg = ''
+      const that = this;
+      that.loading = 0;
+      that.hasError = false;
+      that.errorMsg = '';
       that.progress = 0
     },
     // 设置图片源
     setSourceImg(file) {
       let that = this,
-        fr = new FileReader()
+        fr = new FileReader();
       fr.onload = function(e) {
-        that.sourceImgUrl = fr.result
+        that.sourceImgUrl = fr.result;
         that.startCrop()
-      }
+      };
       fr.readAsDataURL(file)
     },
     // 剪裁前准备工作
@@ -492,8 +492,8 @@ export default {
           lang
         } = that,
         sim = sourceImgMasking,
-        img = new Image()
-      img.src = sourceImgUrl
+        img = new Image();
+      img.src = sourceImgUrl;
       img.onload = function() {
         let nWidth = img.naturalWidth,
           nHeight = img.naturalHeight,
@@ -501,41 +501,41 @@ export default {
           w = sim.width,
           h = sim.height,
           x = 0,
-          y = 0
+          y = 0;
         // 图片像素不达标
         if (nWidth < width || nHeight < height) {
-          that.hasError = true
-          that.errorMsg = lang.error.lowestPx + width + '*' + height
+          that.hasError = true;
+          that.errorMsg = lang.error.lowestPx + width + '*' + height;
           return false
         }
         if (ratio > nRatio) {
-          h = w / nRatio
+          h = w / nRatio;
           y = (sim.height - h) / 2
         }
         if (ratio < nRatio) {
-          w = h * nRatio
+          w = h * nRatio;
           x = (sim.width - w) / 2
         }
-        scale.range = 0
-        scale.x = x
-        scale.y = y
-        scale.width = w
-        scale.height = h
-        scale.degree = 0
-        scale.minWidth = w
-        scale.minHeight = h
-        scale.maxWidth = nWidth * sim.scale
-        scale.maxHeight = nHeight * sim.scale
-        scale.naturalWidth = nWidth
-        scale.naturalHeight = nHeight
-        that.sourceImg = img
-        that.createImg()
+        scale.range = 0;
+        scale.x = x;
+        scale.y = y;
+        scale.width = w;
+        scale.height = h;
+        scale.degree = 0;
+        scale.minWidth = w;
+        scale.minHeight = h;
+        scale.maxWidth = nWidth * sim.scale;
+        scale.maxHeight = nHeight * sim.scale;
+        scale.naturalWidth = nWidth;
+        scale.naturalHeight = nHeight;
+        that.sourceImg = img;
+        that.createImg();
         that.setStep(2)
       }
     },
     // 鼠标按下图片准备移动
     imgStartMove(e) {
-      e.preventDefault()
+      e.preventDefault();
       // 支持触摸事件，则鼠标事件无效
       if (this.isSupportTouch && !e.targetTouches) {
         return false
@@ -545,16 +545,16 @@ export default {
           sourceImgMouseDown,
           scale
         } = this,
-        simd = sourceImgMouseDown
-      simd.mX = et.screenX
-      simd.mY = et.screenY
-      simd.x = scale.x
-      simd.y = scale.y
+        simd = sourceImgMouseDown;
+      simd.mX = et.screenX;
+      simd.mY = et.screenY;
+      simd.x = scale.x;
+      simd.y = scale.y;
       simd.on = true
     },
     // 鼠标按下状态下移动，图片移动
     imgMove(e) {
-      e.preventDefault()
+      e.preventDefault();
       // 支持触摸事件，则鼠标事件无效
       if (this.isSupportTouch && !e.targetTouches) {
         return false
@@ -577,8 +577,8 @@ export default {
         dX = nX - mX,
         dY = nY - mY,
         rX = x + dX,
-        rY = y + dY
-      if (!on) return
+        rY = y + dY;
+      if (!on) return;
       if (rX > 0) {
         rX = 0
       }
@@ -591,7 +591,7 @@ export default {
       if (rY < sim.height - scale.height) {
         rY = sim.height - scale.height
       }
-      scale.x = rX
+      scale.x = rX;
       scale.y = rY
     },
      // 按钮按下开始向右旋转
@@ -599,12 +599,12 @@ export default {
       let that = this,
         {
           scale
-        } = that
-      scale.rotateRight = true
+        } = that;
+      scale.rotateRight = true;
       function rotate() {
         if (scale.rotateRight) {
-          const degree = ++scale.degree
-          that.createImg(degree)
+          const degree = ++scale.degree;
+          that.createImg(degree);
           setTimeout(function() {
             rotate()
           }, 60)
@@ -617,12 +617,12 @@ export default {
       let that = this,
         {
           scale
-        } = that
-      scale.rotateLeft = true
+        } = that;
+      scale.rotateLeft = true;
       function rotate() {
         if (scale.rotateLeft) {
-          const degree = --scale.degree
-          that.createImg(degree)
+          const degree = --scale.degree;
+          that.createImg(degree);
           setTimeout(function() {
             rotate()
           }, 60)
@@ -634,8 +634,8 @@ export default {
     endRotate() {
       const {
         scale
-      } = this
-      scale.rotateLeft = false
+      } = this;
+      scale.rotateLeft = false;
       scale.rotateRight = false
     },
     // 按钮按下开始放大
@@ -643,12 +643,12 @@ export default {
       let that = this,
         {
           scale
-        } = that
-      scale.zoomAddOn = true
+        } = that;
+      scale.zoomAddOn = true;
       function zoom() {
         if (scale.zoomAddOn) {
-          const range = scale.range >= 100 ? 100 : ++scale.range
-          that.zoomImg(range)
+          const range = scale.range >= 100 ? 100 : ++scale.range;
+          that.zoomImg(range);
           setTimeout(function() {
             zoom()
           }, 60)
@@ -665,12 +665,12 @@ export default {
       let that = this,
         {
           scale
-        } = that
-      scale.zoomSubOn = true
+        } = that;
+      scale.zoomSubOn = true;
       function zoom() {
         if (scale.zoomSubOn) {
-          const range = scale.range <= 0 ? 0 : --scale.range
-          that.zoomImg(range)
+          const range = scale.range <= 0 ? 0 : --scale.range;
+          that.zoomImg(range);
           setTimeout(function() {
             zoom()
           }, 60)
@@ -682,7 +682,7 @@ export default {
     endZoomSub(e) {
       const {
         scale
-      } = this
+      } = this;
       scale.zoomSubOn = false
     },
     zoomChange(e) {
@@ -690,12 +690,12 @@ export default {
     },
     // 缩放原图
     zoomImg(newRange) {
-      const that = this
+      const that = this;
       const {
         sourceImgMasking,
         sourceImgMouseDown,
         scale
-      } = this
+      } = this;
       const {
         maxWidth,
         maxHeight,
@@ -706,17 +706,17 @@ export default {
         x,
         y,
         range
-      } = scale
-      const sim = sourceImgMasking
+      } = scale;
+      const sim = sourceImgMasking;
       // 蒙版宽高
-      const sWidth = sim.width
-      const sHeight = sim.height
+      const sWidth = sim.width;
+      const sHeight = sim.height;
       // 新宽高
-      const nWidth = minWidth + (maxWidth - minWidth) * newRange / 100
-      const nHeight = minHeight + (maxHeight - minHeight) * newRange / 100
+      const nWidth = minWidth + (maxWidth - minWidth) * newRange / 100;
+      const nHeight = minHeight + (maxHeight - minHeight) * newRange / 100;
       // 新坐标（根据蒙版中心点缩放）
-      let nX = sWidth / 2 - (nWidth / width) * (sWidth / 2 - x)
-      let nY = sHeight / 2 - (nHeight / height) * (sHeight / 2 - y)
+      let nX = sWidth / 2 - (nWidth / width) * (sWidth / 2 - x);
+      let nY = sHeight / 2 - (nHeight / height) * (sHeight / 2 - y);
       // 判断新坐标是否超过蒙版限制
       if (nX > 0) {
         nX = 0
@@ -731,11 +731,11 @@ export default {
         nY = sHeight - nHeight
       }
       // 赋值处理
-      scale.x = nX
-      scale.y = nY
-      scale.width = nWidth
-      scale.height = nHeight
-      scale.range = newRange
+      scale.x = nX;
+      scale.y = nY;
+      scale.width = nWidth;
+      scale.height = nHeight;
+      scale.range = newRange;
       setTimeout(function() {
         if (scale.range == newRange) {
           that.createImg()
@@ -760,21 +760,21 @@ export default {
           }
         } = that,
         canvas = that.$refs.canvas,
-        ctx = canvas.getContext('2d')
+        ctx = canvas.getContext('2d');
       if (e) {
         // 取消鼠标按下移动状态
         that.sourceImgMouseDown.on = false
       }
-      canvas.width = that.width
-      canvas.height = that.height
-      ctx.clearRect(0, 0, that.width, that.height)
+      canvas.width = that.width;
+      canvas.height = that.height;
+      ctx.clearRect(0, 0, that.width, that.height);
       // 将透明区域设置为白色底边
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, that.width, that.height)
-      ctx.translate(that.width * 0.5, that.height * 0.5)
-      ctx.rotate(Math.PI * degree / 180)
-      ctx.translate(-that.width * 0.5, -that.height * 0.5)
-      ctx.drawImage(sourceImg, x / scale, y / scale, width / scale, height / scale)
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, that.width, that.height);
+      ctx.translate(that.width * 0.5, that.height * 0.5);
+      ctx.rotate(Math.PI * degree / 180);
+      ctx.translate(-that.width * 0.5, -that.height * 0.5);
+      ctx.drawImage(sourceImg, x / scale, y / scale, width / scale, height / scale);
       that.createImgUrl = canvas.toDataURL(mime)
     },
     prepareUpload() {
@@ -783,8 +783,8 @@ export default {
         createImgUrl,
         field,
         ki
-      } = this
-      this.$emit('crop-success', createImgUrl, field, ki)
+      } = this;
+      this.$emit('crop-success', createImgUrl, field, ki);
       if (typeof url === 'string' && url) {
         this.upload()
       } else {
@@ -806,8 +806,8 @@ export default {
           createImgUrl,
           withCredentials
         } = this,
-        fmData = new FormData()
-      fmData.append(field, data2blob(createImgUrl, mime), field + '.' + imgFormat)
+        fmData = new FormData();
+      fmData.append(field, data2blob(createImgUrl, mime), field + '.' + imgFormat);
       // 添加其他参数
       if (typeof params === 'object' && params) {
         Object.keys(params).forEach((k) => {
@@ -819,23 +819,23 @@ export default {
         if (event.lengthComputable) {
           that.progress = 100 * Math.round(event.loaded) / event.total
         }
-      }
+      };
       // 上传文件
-      that.reset()
-      that.loading = 1
-      that.setStep(3)
+      that.reset();
+      that.loading = 1;
+      that.setStep(3);
       request({
         url,
         method: 'post',
         data: fmData
       }).then(resData => {
-        that.loading = 2
+        that.loading = 2;
         that.$emit('crop-upload-success', resData.data)
       }).catch(err => {
         if (that.value) {
-          that.loading = 3
-          that.hasError = true
-          that.errorMsg = lang.fail
+          that.loading = 3;
+          that.hasError = true;
+          that.errorMsg = lang.fail;
           that.$emit('crop-upload-fail', err, field, ki)
         }
       })

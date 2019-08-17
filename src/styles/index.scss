@@ -174,10 +174,22 @@ aside {
 .filter-container {
   padding-bottom: 10px;
 
+  .filter-label {
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: top;
+    height: 36px;
+    line-height: 36px;
+  }
+
   .filter-item {
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: 10px;
+    margin: 0 5px 10px 5px;
+  }
+
+  .filter-right {
+    float: right;
   }
 }
 

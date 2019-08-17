@@ -14,16 +14,19 @@ export default {
   },
   render(h, context) {
     const { icon, title } = context.props
-    const vnodes = []
 
-    if (icon) {
-      vnodes.push(<svg-icon icon-class={icon}/>)
-    }
-
-    if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
-    }
-    return vnodes
+    return [
+      icon && h('el-icon', {
+        props: {
+          name: icon
+        }
+      }),
+      title && h('span', {
+        style: {
+          'margin-left': icon ? 0 : '10px'
+        }
+      }, title)
+    ]
   }
 }
 </script>

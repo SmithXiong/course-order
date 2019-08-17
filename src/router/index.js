@@ -6,12 +6,6 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
-/* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -56,11 +50,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
     path: '/404',
     component: () => import('@/views/error-page/404'),
     hidden: true
@@ -79,11 +68,11 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 's-home', affix: true }
       }
     ]
   },
-  {
+  /*  {
     path: '/documentation',
     component: Layout,
     children: [
@@ -94,8 +83,8 @@ export const constantRoutes = [
         meta: { title: 'Documentation', icon: 'documentation', affix: true }
       }
     ]
-  },
-  {
+  },*/
+  /*  {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
@@ -107,7 +96,7 @@ export const constantRoutes = [
         meta: { title: 'Guide', icon: 'guide', noCache: true }
       }
     ]
-  },
+  },*/
   {
     path: '/profile',
     component: Layout,
@@ -118,7 +107,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: { title: '个人中心', icon: 'user', noCache: true }
       }
     ]
   }
@@ -130,24 +119,23 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/permission',
+    path: '/backend',
     component: Layout,
-    redirect: '/permission/page',
+    redirect: '/backend/platform',
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
     meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      title: '后台管理',
+      icon: 'setting',
+      roles: ['admin'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'platform',
+        component: () => import('@/views/backend/platform/index'),
+        name: 'Platform',
         meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: '平台管理'
         }
       },
       {
@@ -171,7 +159,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
+  /*  {
     path: '/icon',
     component: Layout,
     children: [
@@ -182,15 +170,14 @@ export const asyncRoutes = [
         meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
     ]
-  },
+  },*/
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  /*  componentsRouter,
   chartsRouter,
-  nestedRouter,
-  tableRouter,
+  nestedRouter,*/
 
-  {
+  /*  {
     path: '/example',
     component: Layout,
     redirect: '/example/list',
@@ -233,13 +220,14 @@ export const asyncRoutes = [
         meta: { title: 'Tab', icon: 'tab' }
       }
     ]
-  },
+  },*/
 
   {
     path: '/error',
     component: Layout,
     redirect: 'noRedirect',
     name: 'ErrorPages',
+    hidden: true,
     meta: {
       title: 'Error Pages',
       icon: '404'
@@ -260,7 +248,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
+  /*  {
     path: '/error-log',
     component: Layout,
     children: [
@@ -381,7 +369,7 @@ export const asyncRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
+  },*/
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

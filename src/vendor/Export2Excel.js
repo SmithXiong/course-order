@@ -38,8 +38,7 @@ function generateArray(table) {
             c: outRow.length + colspan - 1
           }
         });
-      };
-
+      }
       //Handle Value
       outRow.push(cellValue !== "" ? cellValue : null);
 
@@ -50,8 +49,7 @@ function generateArray(table) {
     out.push(outRow);
   }
   return [out, ranges];
-};
-
+}
 function datenum(v, date1904) {
   if (date1904) v += 1462;
   var epoch = Date.parse(v);
@@ -154,8 +152,8 @@ export function export_json_to_excel({
   bookType=  'xlsx'
 } = {}) {
   /* original data */
-  filename = filename || 'excel-list'
-  data = [...data]
+  filename = filename || 'excel-list';
+  data = [...data];
   data.unshift(header);
 
   for (let i = multiHeader.length-1; i > -1; i--) {
@@ -192,7 +190,7 @@ export function export_json_to_excel({
           'wch': val.toString().length
         };
       }
-    }))
+    }));
     /*以第一行为初始值*/
     let result = colWidth[0];
     for (let i = 1; i < colWidth.length; i++) {

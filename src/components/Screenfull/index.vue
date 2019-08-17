@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" @click="click" />
+  <div @click="click">
+    <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" />
+    全屏显示
   </div>
 </template>
 
@@ -49,12 +50,12 @@ export default {
 </script>
 
 <style scoped>
-.screenfull-svg {
-  display: inline-block;
-  cursor: pointer;
-  fill: #5a5e66;;
-  width: 20px;
-  height: 20px;
-  vertical-align: 10px;
-}
+  .screenfull-svg {
+    display: inline-block;
+    cursor: pointer;
+    fill: #5a5e66;;
+    width: 20px;
+    height: 20px;
+    vertical-align: 10px;
+  }
 </style>

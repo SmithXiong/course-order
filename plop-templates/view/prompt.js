@@ -1,4 +1,4 @@
-const { notEmpty } = require('../utils.js')
+const { notEmpty } = require('../utils.js');
 
 module.exports = {
   description: 'generate a view',
@@ -37,7 +37,7 @@ module.exports = {
   }
   ],
   actions: data => {
-    const name = '{{name}}'
+    const name = '{{name}}';
     const actions = [{
       type: 'add',
       path: `src/views/${name}/index.vue`,
@@ -48,8 +48,8 @@ module.exports = {
         script: data.blocks.includes('script'),
         style: data.blocks.includes('style')
       }
-    }]
+    }];
 
     return actions
   }
-}
+};
