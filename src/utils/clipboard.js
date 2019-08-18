@@ -19,14 +19,14 @@ function clipboardError() {
 export default function handleClipboard(text, event) {
   const clipboard = new Clipboard(event.target, {
     text: () => text
-  })
+  });
   clipboard.on('success', () => {
-    clipboardSuccess()
+    clipboardSuccess();
     clipboard.destroy()
-  })
+  });
   clipboard.on('error', () => {
-    clipboardError()
+    clipboardError();
     clipboard.destroy()
-  })
+  });
   clipboard.onClick(event)
 }

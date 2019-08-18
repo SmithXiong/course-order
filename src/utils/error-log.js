@@ -5,10 +5,10 @@ import settings from '@/settings'
 
 // you can set in settings.js
 // errorLog:'production' | ['production', 'development']
-const { errorLog: needErrorLog } = settings
+const { errorLog: needErrorLog } = settings;
 
 function checkNeed() {
-  const env = process.env.NODE_ENV
+  const env = process.env.NODE_ENV;
   if (isString(needErrorLog)) {
     return env === needErrorLog
   }
@@ -28,7 +28,7 @@ if (checkNeed()) {
         vm,
         info,
         url: window.location.href
-      })
+      });
       console.error(err, info)
     })
   }

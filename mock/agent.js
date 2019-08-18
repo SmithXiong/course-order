@@ -9,24 +9,19 @@ const image_uri = 'https://wpimg.wallstcn.com/e4558086-631c-425c-9430-56ffb46e70
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    id: '@increment',
     name: Random.first(),
-    address: Random.url('http'),
-    platformId: Random.integer(1,1000).toString(),
-    pushInterval: '@integer(300, 5000)',
-    coursePrice: '@float(1, 100, 2, 2)',
-    unitPrice: '@float(1, 10, 2, 2)',
-    unitQuery: Random.boolean(),
-    allowinput: Random.boolean(),
-    DelayPush: Random.boolean(),
-    announcement: '@title(5, 15)',
+    nickName: Random.last(),
+    id: Random.string(),
+    password: Random.string(),
+    balance: Random.integer(1,100),
+    level: Random.integer(1,100),
     updateAt: '@datetime'
   }))
 }
 
 export default [
   {
-    url: '/platforms',
+    url: '/agentAccounts',
     type: 'get',
     response: config => {
       const { importance, type, title, page = 1, pageSize = 10, sort } = config.query;
@@ -61,7 +56,7 @@ export default [
   },
 
   {
-    url: '/platforms/:id',
+    url: '/agentAccount/:id',
     type: 'get',
     response: config => {
       const { id } = config.query;
@@ -77,7 +72,7 @@ export default [
   },
 
   {
-    url: '/platforms',
+    url: '/agentAccount',
     type: 'post',
     response: _ => {
       return {
@@ -88,7 +83,7 @@ export default [
   },
 
   {
-    url: '/platforms',
+    url: '/agentAccount',
     type: 'put',
     response: _ => {
       return {

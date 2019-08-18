@@ -32,18 +32,18 @@ if (process.env.NODE_ENV === 'production') {
 
 Vue.use(Element, {
   size: 'medium' // set element-ui default size
-})
+});
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
-})
+});
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
-})
+});

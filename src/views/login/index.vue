@@ -73,14 +73,14 @@ export default {
       } else {
         callback()
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
       } else {
         callback()
       }
-    }
+    };
     return {
       loginForm: {
         username: 'admin',
@@ -101,9 +101,9 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
+          this.redirect = query.redirect;
           this.otherQuery = this.getOtherQuery(query)
         }
       },
@@ -149,17 +149,17 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: '/' })
+              this.$router.push({ path: '/' });
               this.loading = false
             })
             .catch(() => {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
+          console.log('error submit!!');
           return false
         }
       })

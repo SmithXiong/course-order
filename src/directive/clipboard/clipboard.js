@@ -1,5 +1,5 @@
 // Inspired by https://github.com/Inndy/vue-clipboard2
-const Clipboard = require('clipboard')
+const Clipboard = require('clipboard');
 if (!Clipboard) {
   throw new Error('you should npm install `clipboard` --save at first ')
 }
@@ -14,15 +14,15 @@ export default {
       const clipboard = new Clipboard(el, {
         text() { return binding.value },
         action() { return binding.arg === 'cut' ? 'cut' : 'copy' }
-      })
+      });
       clipboard.on('success', e => {
-        const callback = el._v_clipboard_success
+        const callback = el._v_clipboard_success;
         callback && callback(e) // eslint-disable-line
-      })
+      });
       clipboard.on('error', e => {
-        const callback = el._v_clipboard_error
+        const callback = el._v_clipboard_error;
         callback && callback(e) // eslint-disable-line
-      })
+      });
       el._v_clipboard = clipboard
     }
   },
@@ -32,7 +32,7 @@ export default {
     } else if (binding.arg === 'error') {
       el._v_clipboard_error = binding.value
     } else {
-      el._v_clipboard.text = function() { return binding.value }
+      el._v_clipboard.text = function() { return binding.value };
       el._v_clipboard.action = function() { return binding.arg === 'cut' ? 'cut' : 'copy' }
     }
   },
@@ -42,7 +42,7 @@ export default {
     } else if (binding.arg === 'error') {
       delete el._v_clipboard_error
     } else {
-      el._v_clipboard.destroy()
+      el._v_clipboard.destroy();
       delete el._v_clipboard
     }
   }

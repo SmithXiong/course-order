@@ -18,7 +18,7 @@ function pluralize(time, label) {
  * @param {number} time
  */
 export function timeAgo(time) {
-  const between = Date.now() / 1000 - Number(time)
+  const between = Date.now() / 1000 - Number(time);
   if (between < 3600) {
     return pluralize(~~(between / 60), ' minute')
   } else if (between < 86400) {
@@ -42,7 +42,7 @@ export function numberFormatter(num, digits) {
     { value: 1E9, symbol: 'G' },
     { value: 1E6, symbol: 'M' },
     { value: 1E3, symbol: 'k' }
-  ]
+  ];
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
       return (num / si[i].value + 0.1).toFixed(digits).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') + si[i].symbol

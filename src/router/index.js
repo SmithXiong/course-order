@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
 import Layout from '@/layout'
@@ -72,6 +72,51 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/orders',
+    component: Layout,
+    redirect: '/orders/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/orders/index'),
+        name: 'Orders',
+        meta: {
+          title: '订单查询',
+          icon: 's-order'
+        }
+      }]
+  },
+  {
+    path: '/finance',
+    component: Layout,
+    redirect: '/finance/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/finance/index'),
+        name: 'Finance',
+        meta: {
+          title: '财务管理',
+          icon: 's-finance'
+        }
+      }]
+  },
+  {
+    path: '/agent',
+    component: Layout,
+    redirect: '/agent/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/agent/index'),
+        name: 'Agent',
+        meta: {
+          title: '代理管理',
+          icon: 'user-solid'
+        }
+      }]
+  },
   /*  {
     path: '/documentation',
     component: Layout,
@@ -111,7 +156,7 @@ export const constantRoutes = [
       }
     ]
   }
-]
+];
 
 /**
  * asyncRoutes
@@ -123,7 +168,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/backend/platform',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'Backend',
     meta: {
       title: '后台管理',
       icon: 'setting',
@@ -138,7 +183,7 @@ export const asyncRoutes = [
           title: '平台管理'
         }
       },
-      {
+/*      {
         path: 'directive',
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
@@ -155,7 +200,7 @@ export const asyncRoutes = [
           title: 'Role Permission',
           roles: ['admin']
         }
-      }
+      }*/
     ]
   },
 
@@ -373,19 +418,19 @@ export const asyncRoutes = [
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
-]
+];
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
-})
+});
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
+  const newRouter = createRouter();
   router.matcher = newRouter.matcher // reset router
 }
 

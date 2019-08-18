@@ -29,7 +29,7 @@ export default {
       const statusMap = {
         success: 'success',
         pending: 'danger'
-      }
+      };
       return statusMap[status]
     },
     orderNoFilter(str) {

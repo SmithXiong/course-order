@@ -6,13 +6,19 @@ import role from './role'
 import article from './article'
 import search from './remote-search'
 import platform from './platform'
+import agent from './agent'
+import finance from './finance'
+import orders from './orders'
 
 const mocks = [
   ...user,
   ...role,
   ...article,
   ...search,
-  ...platform
+  ...platform,
+  ...agent,
+  ...finance,
+  ...orders
 ];
 
 // for front mock

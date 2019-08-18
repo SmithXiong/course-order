@@ -9,7 +9,7 @@
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
@@ -51,8 +51,8 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      this.$store.dispatch('tagsView/delAllViews')
-      await this.$store.dispatch('user/logout')
+      this.$store.dispatch('tagsView/delAllViews');
+      await this.$store.dispatch('user/logout');
       this.$router.push(`/login`)
     }
   }
@@ -130,7 +130,7 @@ export default {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 20px;
         }
 
         .el-icon-caret-bottom {

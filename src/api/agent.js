@@ -2,30 +2,30 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/platforms',
+    url: '/agentAccounts',
     method: 'get',
     params: query
   })
 }
 
-export function fetchPlatform(id) {
+export function fetchAgent(id) {
   return request({
-    url: `/platforms/${id}`,
+    url: `/agentAccounts/${id}`,
     method: 'get'
   })
 }
 
-export function createPlatform(data) {
+export function createAgent(data) {
   return request({
-    url: '/platforms',
+    url: '/agentAccounts',
     method: 'post',
     data
   })
 }
 
-export function updatePlatform(data) {
+export function updateAgent(data) {
   return request({
-    url: `/platforms/${data.id}`,
+    url: `/agentAccounts/${data.id}`,
     method: 'put',
     data
   })

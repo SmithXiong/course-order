@@ -68,7 +68,7 @@ const lineChartData = {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130]
   }
-}
+};
 
 export default {
   name: 'DashboardAdmin',

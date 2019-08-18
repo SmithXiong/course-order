@@ -10,7 +10,7 @@
       />
       <span class="filter-label">平台状态：</span>
       <el-select v-model="listQuery.status" placeholder="所有" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in statusList" :key="item" :label="item" :value="item" />
+        <el-option v-for="item in statusList" :key="item" :label="item" :value="item"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -43,7 +43,6 @@
       :data="list"
       border
       fit
-      highlight-current-row
       style="width: 100%;"
     >
       <el-table-column label="平台ID" prop="id" align="center" width="100">
@@ -114,7 +113,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize"
+                @pagination="getList"/>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
       <el-form
         ref="dataForm"
@@ -125,22 +125,22 @@
         style="width: 500px; margin-left:50px;"
       >
         <el-form-item label="平台名称：" prop="name">
-          <el-input v-model="temp.name" />
+          <el-input v-model="temp.name"/>
         </el-form-item>
         <el-form-item label="平台接口地址：" prop="address">
-          <el-input v-model="temp.address" />
+          <el-input v-model="temp.address"/>
         </el-form-item>
         <el-form-item label="平台ID：" prop="platformId">
-          <el-input v-model="temp.platformId" />
+          <el-input v-model="temp.platformId"/>
         </el-form-item>
-        <el-form-item label="推送间隔(秒)：" prop="platformId">
-          <el-input-number v-model.number="temp.pushInterval" controls-position="right" :precision="0" step-strictly :min="1" />
+        <el-form-item label="推送间隔(秒)：" prop="pushInterval">
+          <el-input-number v-model.number="temp.pushInterval" controls-position="right" :precision="0" :min="1"/>
         </el-form-item>
         <el-form-item label="课程单价：" prop="coursePrice">
-          <el-input-number v-model.number="temp.coursePrice" controls-position="right" :precision="1" :min="0.1" />
+          <el-input-number v-model.number="temp.coursePrice" controls-position="right" :precision="2" :min="0.01"/>
         </el-form-item>
         <el-form-item label="单元价格：" prop="unitPrice">
-          <el-input-number v-model.number="temp.unitPrice" controls-position="right" :precision="1" :min="0.1" />
+          <el-input-number v-model.number="temp.unitPrice" controls-position="right" :precision="2" :min="0.01"/>
         </el-form-item>
         <el-form-item label="开启单元查询：" prop="unitQuery">
           <el-radio-group v-model="temp.unitQuery">
@@ -148,20 +148,20 @@
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="开启输入信息：" prop="unitQuery">
+        <el-form-item label="开启输入信息：" prop="allowinput">
           <el-radio-group v-model="temp.allowinput">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="开启延迟推送：" prop="unitQuery">
+        <el-form-item label="开启延迟推送：" prop="DelayPush">
           <el-radio-group v-model="temp.DelayPush">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="平台公告：" prop="announcement">
-          <el-input v-model="temp.announcement" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" />
+          <el-input v-model="temp.announcement" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -173,192 +173,236 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="详情" :visible.sync="dialogReadVisible" :footer="null" width="600px">
+      <el-form
+        ref="dataForm"
+        :model="temp"
+        label-position="left"
+        label-width="120px"
+        style="width: 500px; margin-left:50px;"
+      >
+        <el-form-item label="平台名称：">
+          {{temp.name}}
+        </el-form-item>
+        <el-form-item label="平台接口地址：">
+          {{temp.address}}
+        </el-form-item>
+        <el-form-item label="平台ID：">
+          {{temp.platformId}}
+        </el-form-item>
+        <el-form-item label="推送间隔(秒)：">
+          {{temp.pushInterval}}
+        </el-form-item>
+        <el-form-item label="课程单价：">
+          {{temp.coursePrice}}
+        </el-form-item>
+        <el-form-item label="单元价格：">
+          {{temp.unitPrice}}
+        </el-form-item>
+        <el-form-item label="开启单元查询：">
+          {{temp.unitQuery ? '是' : '否'}}
+        </el-form-item>
+        <el-form-item label="开启输入信息：">
+          {{temp.allowinput ? '是' : '否'}}
+        </el-form-item>
+        <el-form-item label="开启延迟推送：">
+          {{temp.DelayPush ? '是' : '否'}}
+        </el-form-item>
+        <el-form-item label="平台公告：">
+          {{temp.announcement}}
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, fetchPlatform, createPlatform, updatePlatform } from '../../../api/platform'
-import waves from '../../../directive/waves' // waves directive
-import { parseTime } from '../../../utils'
-import Pagination from '../../../components/Pagination' // secondary package based on el-pagination
+  import {fetchList, fetchPlatform, createPlatform, updatePlatform} from '../../../api/platform'
+  import waves from '../../../directive/waves' // waves directive
+  import {parseTime} from '../../../utils'
+  import Pagination from '../../../components/Pagination' // secondary package based on el-pagination
 
-export default {
-  name: 'Platform',
-  components: { Pagination },
-  directives: { waves },
-  data() {
-    return {
-      list: null,
-      total: 0,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        pageSize: 10,
-        title: undefined,
-        status: '所有'
-      },
-      statusList: ['所有', '正常', '异常'],
-      temp: {
-        name: '',
-        address: '',
-        platformId: '',
-        pushInterval: undefined,
-        coursePrice: undefined,
-        unitPrice: undefined,
-        unitQuery: true,
-        allowinput: true,
-        DelayPush: true,
-        announcement: ''
-      },
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: '编辑',
-        create: '新增'
-      },
-      rules: {
-        name: [{ required: true, message: '请输入平台名称', trigger: 'change' }],
-        address: [{ required: true, message: '请输入平台接口地址', trigger: 'change' }],
-        platformId: [{ required: true, message: '请输入平台ID', trigger: 'blur' }],
-        pushInterval: [{ required: true, message: '请输入推送间隔时间', trigger: 'blur' }],
-        coursePrice: [{ required: true, message: '请输入课程单价', trigger: 'blur' }],
-        unitPrice: [{ required: true, message: '请输入单元价格', trigger: 'blur' }],
-        unitQuery: [{ required: true, message: '请选择是否开启单元查询', trigger: 'blur' }],
-        allowinput: [{ required: true, message: '请选择是否开启输入信息', trigger: 'blur' }],
-        DelayPush: [{ required: true, message: '请选择是否开启延迟推送', trigger: 'blur' }],
-        announcement: [{ required: true, message: '请输入平台公告', trigger: 'blur' }]
-      },
-      downloadLoading: false
-    }
-  },
-  created() {
-    this.getList()
-  },
-  mounted() {
-
-  },
-  methods: {
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.list
-        this.total = response.data.pageInfo.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
-      })
+  export default {
+    name: 'Platform',
+    components: {Pagination},
+    directives: {waves},
+    data() {
+      return {
+        list: null,
+        total: 0,
+        listLoading: true,
+        listQuery: {
+          page: 1,
+          pageSize: 10,
+          title: undefined,
+          status: undefined
+        },
+        statusList: [ '正常', '异常'],
+        temp: {
+          name: '',
+          address: '',
+          platformId: '',
+          pushInterval: undefined,
+          coursePrice: undefined,
+          unitPrice: undefined,
+          unitQuery: true,
+          allowinput: true,
+          DelayPush: true,
+          announcement: ''
+        },
+        dialogFormVisible: false,
+        dialogStatus: '',
+        textMap: {
+          update: '编辑',
+          create: '新增'
+        },
+        rules: {
+          name: [{required: true, message: '请输入平台名称', trigger: 'blur'}],
+          address: [{required: true, message: '请输入平台接口地址', trigger: 'blur'}],
+          platformId: [{required: true, message: '请输入平台ID', trigger: 'blur'}],
+          pushInterval: [{required: true, message: '请输入推送间隔时间', trigger: 'blur'}],
+          coursePrice: [{required: true, message: '请输入课程单价', trigger: 'blur'}],
+          unitPrice: [{required: true, message: '请输入单元价格', trigger: 'blur'}],
+          unitQuery: [{required: true, message: '请选择是否开启单元查询', trigger: 'blur'}],
+          allowinput: [{required: true, message: '请选择是否开启输入信息', trigger: 'blur'}],
+          DelayPush: [{required: true, message: '请选择是否开启延迟推送', trigger: 'blur'}],
+          announcement: [{required: true, message: '请输入平台公告', trigger: 'blur'}]
+        },
+        downloadLoading: false,
+        dialogReadVisible: false
+      }
     },
-    handleFilter() {
-      this.listQuery.page = 1
+    created() {
       this.getList()
     },
-    resetFilter() {
-      this.listQuery = {
-        page: 1,
-        pageSize: 10,
-        title: undefined,
-        status: '所有'
-      }
-    },
-    resetTemp() {
-      this.temp = {
-        name: '',
-        address: '',
-        platformId: '',
-        pushInterval: 1,
-        coursePrice: undefined,
-        unitPrice: undefined,
-        unitQuery: true,
-        allowinput: true,
-        DelayPush: true,
-        announcement: ''
-      }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          createPlatform(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$message({
-              message: '新增成功',
-              type: 'success'
-            })
-          })
-        }
-      })
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          updatePlatform(this.temp).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$message({
-              message: '更新成功',
-              type: 'success'
-            })
-          })
-        }
-      })
-    },
-    handleDetail(row) {
-      fetchPlatform(row.id).then(response => {
-        this.temp = response.data.pvData
-      })
-    },
-    handleDelete(row) {
+    mounted() {
 
     },
-    handleDownload() {
-      this.downloadLoading = true
+    methods: {
+      getList() {
+        this.listLoading = true;
+        fetchList(this.listQuery).then(response => {
+          this.list = response.data.list;
+          this.total = response.data.pageInfo.total;
+
+          // Just to simulate the time of the request
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        })
+      },
+      handleFilter() {
+        this.listQuery.page = 1;
+        this.getList()
+      },
+      resetFilter() {
+        this.listQuery = {
+          page: 1,
+          pageSize: 10,
+          title: undefined,
+          status: '所有'
+        };
+        this.getList()
+      },
+      resetTemp() {
+        this.temp = {
+          name: '',
+          address: '',
+          platformId: '',
+          pushInterval: 1,
+          coursePrice: undefined,
+          unitPrice: undefined,
+          unitQuery: true,
+          allowinput: true,
+          DelayPush: true,
+          announcement: ''
+        }
+      },
+      handleCreate() {
+        this.resetTemp();
+        this.dialogStatus = 'create';
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+      },
+      createData() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            createPlatform(this.temp).then(() => {
+              this.list.unshift(this.temp);
+              this.dialogFormVisible = false;
+              this.$message({
+                message: '新增成功',
+                type: 'success'
+              })
+            })
+          }
+        })
+      },
+      handleUpdate(row) {
+        this.temp = Object.assign({}, row); // copy obj
+        this.dialogStatus = 'update';
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+      },
+      updateData() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            updatePlatform(this.temp).then(() => {
+              for (const v of this.list) {
+                if (v.id === this.temp.id) {
+                  const index = this.list.indexOf(v);
+                  this.list.splice(index, 1, this.temp);
+                  break
+                }
+              }
+              this.dialogFormVisible = false;
+              this.$message({
+                message: '更新成功',
+                type: 'success'
+              })
+            })
+          }
+        })
+      },
+      handleDetail(row) {
+        /*fetchPlatform(row.id).then(response => {
+          this.temp = response.data.pvData
+        })*/
+        this.temp = Object.assign({}, row);
+        this.dialogReadVisible = true;
+      },
+      handleDelete(row) {
+
+      },
+      handleDownload() {
+        this.downloadLoading = true;
         import('../../../vendor/Export2Excel').then(excel => {
-          const tHeader = ['平台名称', '平台接口地址', '平台Id', '推送间隔', '课程单价', '单元价格']
-          const filterVal = ['name', 'address', 'platformId', 'pushInterval', 'coursePrice', 'unitPrice']
-          const data = this.formatJson(filterVal, this.list)
+          const tHeader = ['平台名称', '平台接口地址', '平台Id', '推送间隔', '课程单价', '单元价格'];
+          const filterVal = ['name', 'address', 'platformId', 'pushInterval', 'coursePrice', 'unitPrice'];
+          const data = this.formatJson(filterVal, this.list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
             filename: '平台列表'
-          })
+          });
           this.downloadLoading = false
         })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        }))
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
