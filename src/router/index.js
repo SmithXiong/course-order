@@ -73,6 +73,31 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/course/index'),
+        name: 'Course',
+        meta: {
+          title: '课堂下单',
+          icon: 's-order'
+        }
+      },
+      {
+        path: 'order/:id',
+        component: () => import('@/views/course/order'),
+        name: 'CourseOrder',
+        hidden: true,
+        meta: {
+          title: '课堂下单',
+          icon: 's-order'
+        }
+      }]
+  },
+  {
     path: '/orders',
     component: Layout,
     redirect: '/orders/index',

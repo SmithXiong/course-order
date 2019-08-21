@@ -45,7 +45,7 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="平台ID" prop="id" align="center" width="100">
+      <el-table-column label="平台ID" width="100px">
         <template slot-scope="scope">
           <span>{{ scope.row.platformId }}</span>
         </template>

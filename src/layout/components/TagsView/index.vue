@@ -209,7 +209,7 @@
 
 <style lang="scss" scoped>
   .tags-view-container {
-    height: 34px;
+    height: 44px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -218,19 +218,22 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
 
     .tags-view-wrapper {
-      width: calc(100% - 90px);
+      width: calc(100% - 98px);
+      /deep/.el-scrollbar__wrap {
+        height: 60px;
+      }
 
       .tags-view-item {
         display: inline-block;
         position: relative;
         cursor: pointer;
-        height: 26px;
-        line-height: 26px;
+        height: 36px;
+        line-height: 36px;
         border: 1px solid #d8dce5;
         color: #495060;
         background: #fff;
         padding: 0 8px;
-        font-size: 12px;
+        font-size: 14px;
         margin-left: 5px;
         margin-top: 4px;
 
@@ -265,12 +268,12 @@
       display: inline-block;
       position: relative;
       cursor: pointer;
-      height: 26px;
-      line-height: 26px;
+      height: 36px;
+      line-height: 36px;
       color: #495060;
       background: #fff;
       padding: 0 8px;
-      font-size: 12px;
+      font-size: 14px;
       margin-left: 5px;
       margin-top: 4px;
     }
@@ -306,8 +309,9 @@
   .tags-view-wrapper {
     .tags-view-item {
       .el-icon-close {
-        width: 16px;
-        height: 16px;
+        width: 22px;
+        height: 22px;
+        font-size: 16px;
         vertical-align: 2px;
         border-radius: 50%;
         text-align: center;

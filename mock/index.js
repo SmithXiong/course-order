@@ -9,6 +9,7 @@ import platform from './platform'
 import agent from './agent'
 import finance from './finance'
 import orders from './orders'
+import course from './course'
 
 const mocks = [
   ...user,
@@ -18,7 +19,8 @@ const mocks = [
   ...platform,
   ...agent,
   ...finance,
-  ...orders
+  ...orders,
+  ...course
 ];
 
 // for front mock
