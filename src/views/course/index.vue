@@ -109,7 +109,7 @@
       },
       //立即下单
       handleOrder(row) {
-        this.$router.push({name: 'CourseOrder', params: {id: row.id}});
+        this.$router.push({name: 'CourseOrder', params: {id: row.id, courseName: row.name}});
       },
     }
   }

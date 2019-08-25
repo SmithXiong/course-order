@@ -12,7 +12,7 @@
         @click.middle.native="closeSelectedTag(tag)"
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
-        {{ tag.title }}
+        {{ tag.params && tag.params.courseName ? tag.params.courseName : tag.title }}
         <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
     </scroll-pane>
@@ -76,6 +76,7 @@
     mounted() {
       this.initTags();
       this.addTags()
+      console.log(this.visitedViews)
     },
     methods: {
       isActive(route) {
@@ -219,9 +220,6 @@
 
     .tags-view-wrapper {
       width: calc(100% - 98px);
-      /deep/.el-scrollbar__wrap {
-        height: 60px;
-      }
 
       .tags-view-item {
         display: inline-block;

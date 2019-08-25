@@ -87,7 +87,7 @@ export const constantRoutes = [
         }
       },
       {
-        path: 'order/:id',
+        path: 'order/:id/:courseName',
         component: () => import('@/views/course/order'),
         name: 'CourseOrder',
         hidden: true,
