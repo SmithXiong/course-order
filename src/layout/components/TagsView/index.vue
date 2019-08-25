@@ -76,7 +76,6 @@
     mounted() {
       this.initTags();
       this.addTags()
-      console.log(this.visitedViews)
     },
     methods: {
       isActive(route) {
