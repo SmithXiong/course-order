@@ -65,8 +65,8 @@
 </template>
 
 <script>
-  import {fetchCourse} from '../../api/course'
-  import waves from '../../directive/waves' // waves directive
+  import {fetchCourse} from '@/api/course'
+  import waves from '@/directive/waves' // waves directive
 
   export default {
     name: 'CourseOrder',
@@ -210,7 +210,7 @@
       onSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log(this.temp.accountList)
+            console.log(this.temp.accountList);
             console.log(this.$refs.courseTree.getCheckedNodes())
           }
         })

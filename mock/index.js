@@ -10,6 +10,7 @@ import agent from './agent'
 import finance from './finance'
 import orders from './orders'
 import course from './course'
+import online from './online'
 
 const mocks = [
   ...user,
@@ -20,7 +21,8 @@ const mocks = [
   ...agent,
   ...finance,
   ...orders,
-  ...course
+  ...course,
+  ...online
 ];
 
 // for front mock

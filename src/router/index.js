@@ -201,11 +201,35 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'notice',
+        component: () => import('@/views/backend/notice/index'),
+        name: 'Notice',
+        meta: {
+          title: '公告管理'
+        }
+      },
+      {
+        path: 'level',
+        component: () => import('@/views/backend/level/index'),
+        name: 'Level',
+        meta: {
+          title: '等级管理'
+        }
+      },
+      {
         path: 'platform',
         component: () => import('@/views/backend/platform/index'),
         name: 'Platform',
         meta: {
           title: '平台管理'
+        }
+      },
+      {
+        path: 'online',
+        component: () => import('@/views/backend/online/index'),
+        name: 'Online',
+        meta: {
+          title: '在线用户'
         }
       },
 /*      {

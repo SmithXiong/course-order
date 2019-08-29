@@ -3,7 +3,7 @@
     <div class="filter-container">
       <span class="filter-label">平台名称：</span>
       <el-input
-        v-model="listQuery.title"
+        v-model="listQuery.name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -26,16 +26,16 @@
       >
         新增
       </el-button>
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item filter-right"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >
-        导出
-      </el-button>
+      <!--      <el-button
+              v-waves
+              :loading="downloadLoading"
+              class="filter-item filter-right"
+              type="primary"
+              icon="el-icon-download"
+              @click="handleDownload"
+            >
+              导出
+            </el-button>-->
     </div>
 
     <el-table
@@ -47,7 +47,7 @@
     >
       <el-table-column label="平台ID" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.platformId }}</span>
+          <span>{{ scope.row.platform_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="平台名称" width="120px">
@@ -62,32 +62,27 @@
       </el-table-column>
       <el-table-column label="推送间隔" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.pushInterval }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="课程单价" width="80px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.coursePrice }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="单元价格" width="80px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.unitPrice }}</span>
+          <span>{{ scope.row.push_interval }}</span>
         </template>
       </el-table-column>
       <el-table-column label="单元查询" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.unitQuery ? '是' : '否' }}</span>
+          <span>{{ scope.row.unit_query ? '是' : '否' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="输入信息" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.allowinput ? '是' : '否' }}</span>
+          <span>{{ scope.row.allow_input ? '是' : '否' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="延迟推送" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.DelayPush ? '是' : '否' }}</span>
+          <span>{{ scope.row.delay_push ? '是' : '否' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="60px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="平台公告" min-width="200px">
@@ -107,22 +102,22 @@
           >
             详情
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+          <!--<el-button size="mini" type="danger" @click="handleDelete(row)">
             删除
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize"
                 @pagination="getList"/>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="750px">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="left"
         label-width="120px"
-        style="width: 500px; margin-left:50px;"
+        style="width: 650px; margin-left:30px;"
       >
         <el-form-item label="平台名称：" prop="name">
           <el-input v-model="temp.name"/>
@@ -130,32 +125,88 @@
         <el-form-item label="平台接口地址：" prop="address">
           <el-input v-model="temp.address"/>
         </el-form-item>
-        <el-form-item label="平台ID：" prop="platformId">
-          <el-input v-model="temp.platformId"/>
+        <el-form-item label="平台ID：" prop="platform_id">
+          <el-input v-model="temp.platform_id"/>
         </el-form-item>
-        <el-form-item label="推送间隔(秒)：" prop="pushInterval">
-          <el-input-number v-model.number="temp.pushInterval" controls-position="right" :precision="0" :min="1"/>
+        <el-form-item label="推送间隔(秒)：" prop="push_interval">
+          <el-input-number v-model.number="temp.push_interval" controls-position="right" :precision="0" :min="1"/>
         </el-form-item>
-        <el-form-item label="课程单价：" prop="coursePrice">
-          <el-input-number v-model.number="temp.coursePrice" controls-position="right" :precision="2" :min="0.01"/>
-        </el-form-item>
-        <el-form-item label="单元价格：" prop="unitPrice">
-          <el-input-number v-model.number="temp.unitPrice" controls-position="right" :precision="2" :min="0.01"/>
-        </el-form-item>
-        <el-form-item label="开启单元查询：" prop="unitQuery">
-          <el-radio-group v-model="temp.unitQuery">
+        <el-form-item label="开启单元查询：" prop="unit_query">
+          <el-radio-group v-model="temp.unit_query">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="开启输入信息：" prop="allowinput">
-          <el-radio-group v-model="temp.allowinput">
+        <el-form-item label="开启输入信息：" prop="allow_input">
+          <el-radio-group v-model="temp.allow_input">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="开启延迟推送：" prop="DelayPush">
-          <el-radio-group v-model="temp.DelayPush">
+        <el-form-item label="开启延迟推送：" prop="delay_push">
+          <el-radio-group v-model="temp.delay_push">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="等级价格：">
+          <el-card :body-style="{padding:'5px'}">
+            <div slot="header">
+              <el-row type="flex" justify="center" align="center" :gutter="10">
+                <el-col :span="7">代理等级</el-col>
+                <el-col :span="7">整本价格</el-col>
+                <el-col :span="7">单元价格</el-col>
+                <el-col :span="3">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handleAddPrice()"
+                  >
+                    添加
+                  </el-button>
+                </el-col>
+              </el-row>
+            </div>
+            <el-row type="flex" justify="center" align="center" :gutter="10" v-for="(item,index) in temp.price" :key="item.key">
+              <el-col :span="7">
+                <el-form-item label-width="0" :prop="'price.' + index + '.level_id'" :rules="{
+      required: true, message: '请选择代理等级', trigger: 'blur'
+    }">
+                  <el-select v-model="item.level_id" style="width: 100%" @change="handleChangeLevel">
+                    <el-option v-for="level in item.levelList" :key="level.level_id" :label="level.name"
+                               :value="level.level_id"/>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item label-width="0" :prop="'price.' + index + '.course_price'" :rules="{
+      required: true, message: '请输入整本价格', trigger: 'blur'
+    }">
+                  <el-input-number style="width: 100%" v-model.number="item.course_price" controls-position="right" :precision="2"
+                                   :min="0.01"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item label-width="0" :prop="'price.' + index + '.unit_price'" :rules="{
+      required: true, message: '请输入单元价格', trigger: 'blur'
+    }">
+                  <el-input-number style="width: 100%" v-model.number="item.unit_price" controls-position="right" :precision="2" :min="0.01"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="3">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelPrice(index)"
+                >
+                  删除
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-form-item>
+        <el-form-item label="是否启用：" prop="status">
+          <el-radio-group v-model="temp.status">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
@@ -173,13 +224,13 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="详情" :visible.sync="dialogReadVisible" :footer="null" width="600px">
+    <el-dialog title="详情" :visible.sync="dialogReadVisible" :footer="null" width="740px">
       <el-form
         ref="dataForm"
         :model="temp"
         label-position="left"
         label-width="120px"
-        style="width: 500px; margin-left:50px;"
+        style="width: 620px; margin-left:30px;"
       >
         <el-form-item label="平台名称：">
           {{temp.name}}
@@ -188,25 +239,44 @@
           {{temp.address}}
         </el-form-item>
         <el-form-item label="平台ID：">
-          {{temp.platformId}}
+          {{temp.platform_id}}
         </el-form-item>
         <el-form-item label="推送间隔(秒)：">
-          {{temp.pushInterval}}
-        </el-form-item>
-        <el-form-item label="课程单价：">
-          {{temp.coursePrice}}
-        </el-form-item>
-        <el-form-item label="单元价格：">
-          {{temp.unitPrice}}
+          {{temp.push_interval}}
         </el-form-item>
         <el-form-item label="开启单元查询：">
-          {{temp.unitQuery ? '是' : '否'}}
+          {{temp.unit_query ? '是' : '否'}}
         </el-form-item>
         <el-form-item label="开启输入信息：">
-          {{temp.allowinput ? '是' : '否'}}
+          {{temp.allow_input ? '是' : '否'}}
         </el-form-item>
         <el-form-item label="开启延迟推送：">
-          {{temp.DelayPush ? '是' : '否'}}
+          {{temp.delay_push ? '是' : '否'}}
+        </el-form-item>
+        <el-form-item label="等级价格：">
+          <el-card :body-style="{padding:'5px'}">
+            <div slot="header">
+              <el-row type="flex" justify="center" align="center" :gutter="10">
+                <el-col :span="8">代理等级</el-col>
+                <el-col :span="8">整本价格</el-col>
+                <el-col :span="8">单元价格</el-col>
+              </el-row>
+            </div>
+            <el-row type="flex" justify="center" align="center" :gutter="10" v-for="(item,index) in temp.price" :key="item.level_id">
+              <el-col :span="8">
+                {{item.level_id}}
+              </el-col>
+              <el-col :span="8">
+                {{item.course_price}}
+              </el-col>
+              <el-col :span="8">
+                {{item.unit_price}}
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-form-item>
+        <el-form-item label="是否启用：">
+          {{temp.status ? '是' : '否'}}
         </el-form-item>
         <el-form-item label="平台公告：">
           {{temp.announcement}}
@@ -217,10 +287,12 @@
 </template>
 
 <script>
-  import {fetchList, fetchPlatform, createPlatform, updatePlatform} from '../../../api/platform'
-  import waves from '../../../directive/waves' // waves directive
-  import {parseTime} from '../../../utils'
-  import Pagination from '../../../components/Pagination' // secondary package based on el-pagination
+  import {fetchPlatformList, fetchPlatform, createPlatform, updatePlatform} from '@/api/platform'
+  import {fetchLevelList} from '@/api/level'
+  import waves from '@/directive/waves' // waves directive
+  import {parseTime, uuid} from '@/utils'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import _ from 'lodash'
 
   export default {
     name: 'Platform',
@@ -234,20 +306,20 @@
         listQuery: {
           page: 1,
           pageSize: 10,
-          title: undefined,
+          name: undefined,
           status: undefined
         },
-        statusList: [ '正常', '异常'],
+        statusList: ['正常', '异常'],
         temp: {
           name: '',
           address: '',
-          platformId: '',
-          pushInterval: undefined,
-          coursePrice: undefined,
-          unitPrice: undefined,
-          unitQuery: true,
-          allowinput: true,
-          DelayPush: true,
+          platform_id: '',
+          push_interval: undefined,
+          price: [],
+          unit_query: true,
+          allow_input: true,
+          delay_push: true,
+          status: true,
           announcement: ''
         },
         dialogFormVisible: false,
@@ -259,21 +331,22 @@
         rules: {
           name: [{required: true, message: '请输入平台名称', trigger: 'blur'}],
           address: [{required: true, message: '请输入平台接口地址', trigger: 'blur'}],
-          platformId: [{required: true, message: '请输入平台ID', trigger: 'blur'}],
-          pushInterval: [{required: true, message: '请输入推送间隔时间', trigger: 'blur'}],
-          coursePrice: [{required: true, message: '请输入课程单价', trigger: 'blur'}],
-          unitPrice: [{required: true, message: '请输入单元价格', trigger: 'blur'}],
-          unitQuery: [{required: true, message: '请选择是否开启单元查询', trigger: 'blur'}],
-          allowinput: [{required: true, message: '请选择是否开启输入信息', trigger: 'blur'}],
-          DelayPush: [{required: true, message: '请选择是否开启延迟推送', trigger: 'blur'}],
+          platform_id: [{required: true, message: '请输入平台ID', trigger: 'blur'}],
+          push_interval: [{required: true, message: '请输入推送间隔时间', trigger: 'blur'}],
+          unit_query: [{required: true, message: '请选择是否开启单元查询', trigger: 'blur'}],
+          allow_input: [{required: true, message: '请选择是否开启输入信息', trigger: 'blur'}],
+          delay_push: [{required: true, message: '请选择是否开启延迟推送', trigger: 'blur'}],
+          status: [{required: true, message: '请选择是否启用', trigger: 'blur'}],
           announcement: [{required: true, message: '请输入平台公告', trigger: 'blur'}]
         },
         downloadLoading: false,
-        dialogReadVisible: false
+        dialogReadVisible: false,
+        levelList: []
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.getLevelList()
     },
     mounted() {
 
@@ -281,14 +354,19 @@
     methods: {
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchPlatformList(this.listQuery).then(response => {
           this.list = response.data.list;
-          this.total = response.data.pageInfo.total;
-
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          this.total = response.data.total;
+          this.listLoading = false;
+        })
+      },
+      getLevelList() {
+        fetchLevelList({
+          page: 1,
+          pageSize: 100,
+          status: true
+        }).then(response => {
+          this.levelList = response.data.list;
         })
       },
       handleFilter() {
@@ -299,22 +377,59 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          title: undefined,
+          name: undefined,
           status: '所有'
         };
         this.getList()
+      },
+      handleAddPrice() {
+        let levels = this.temp.price.map(o => o.level_id);
+        let levelList = _.cloneDeep(this.levelList);
+        if (levels.length !== 0) {
+          levels.forEach(o => {
+            let index = levelList.findIndex(l => l.level_id === o);
+            index !== -1 && levelList.splice(index, 1);
+          })
+        }
+        this.temp.price.push({
+          levelList: levelList,
+          level_id: undefined,
+          course_price: undefined,
+          unit_price: undefined,
+          key: Date.now()
+        })
+      },
+      handleDelPrice(index) {
+        this.temp.price.splice(index, 1);
+        this.handleChangeLevel()
+      },
+      handleChangeLevel() {
+        let levels = this.temp.price.map(o => o.level_id);
+        if (levels.length !== 0) {
+          levels.forEach((o, i) => {
+            let other = levels, levelList = _.cloneDeep(this.levelList);
+            if (!!o) {
+              other = _.cloneDeep(levels.filter(m => m !== o));
+            }
+            levelList = levelList.reduce((prev, cur) => {
+              !other.includes(cur.level_id) && prev.push(cur);
+              return prev
+            }, []);
+            this.temp.price[i].levelList = levelList;
+          })
+        }
       },
       resetTemp() {
         this.temp = {
           name: '',
           address: '',
-          platformId: '',
-          pushInterval: 1,
-          coursePrice: undefined,
-          unitPrice: undefined,
-          unitQuery: true,
-          allowinput: true,
-          DelayPush: true,
+          platform_id: '',
+          push_interval: undefined,
+          price: [],
+          unit_query: true,
+          allow_input: true,
+          delay_push: true,
+          status: true,
           announcement: ''
         }
       },
@@ -329,19 +444,52 @@
       createData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.temp.price = this.temp.price.map(o => ({
+              level_id: o.level_id,
+              course_price: o.course_price,
+              unit_price: o.unit_price,
+            }));
             createPlatform(this.temp).then(() => {
-              this.list.unshift(this.temp);
               this.dialogFormVisible = false;
               this.$message({
                 message: '新增成功',
                 type: 'success'
-              })
+              });
+              this.getList();
             })
           }
         })
       },
       handleUpdate(row) {
-        this.temp = Object.assign({}, row); // copy obj
+        const {
+          course_platform_id,
+          name,
+          address,
+          platform_id,
+          push_interval,
+          price,
+          unit_query,
+          allow_input,
+          delay_push,
+          status,
+          announcement
+        } = row;
+        this.temp = {
+          course_platform_id,
+          name,
+          address,
+          platform_id,
+          push_interval,
+          price: price.map(o => {
+            return {...o,key:uuid()}
+          }),
+          unit_query,
+          allow_input,
+          delay_push,
+          status,
+          announcement
+        }; // copy obj
+        this.handleChangeLevel();
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
         this.$nextTick(() => {
@@ -351,19 +499,19 @@
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            updatePlatform(this.temp).then(() => {
-              for (const v of this.list) {
-                if (v.id === this.temp.id) {
-                  const index = this.list.indexOf(v);
-                  this.list.splice(index, 1, this.temp);
-                  break
-                }
-              }
+            let params = _.cloneDeep(this.temp);
+            params.price = params.price.map(o => ({
+              level_id: o.level_id,
+              course_price: o.course_price,
+              unit_price: o.unit_price,
+            }));
+            updatePlatform(params).then(() => {
               this.dialogFormVisible = false;
               this.$message({
                 message: '更新成功',
                 type: 'success'
-              })
+              });
+              this.getList();
             })
           }
         })
@@ -406,5 +554,12 @@
 </script>
 
 <style lang="scss" scoped>
-
+  /deep/ .el-card__header {
+    padding: 5px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  /deep/ .el-form-item .el-form-item {
+    margin-bottom: 20px;
+  }
 </style>

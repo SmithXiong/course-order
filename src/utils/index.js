@@ -12,6 +12,9 @@ export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
   }
+  if (time === null || time === undefined) {
+    return null
+  }
   let format = cFormat || 'yyyy-MM-dd hh:mm:ss';
   let date;
   if (typeof time === 'object') {
@@ -343,4 +346,15 @@ export function removeClass(ele, cls) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
     ele.className = ele.className.replace(reg, ' ')
   }
+}
+
+/**
+ * @returns {string}
+ */
+export function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }

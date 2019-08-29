@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchPlatformList(query) {
   return request({
-    url: '/platforms',
+    url: '/coursePlatform/',
     method: 'get',
     params: query
   })
@@ -10,14 +10,14 @@ export function fetchList(query) {
 
 export function fetchPlatform(id) {
   return request({
-    url: `/platforms/${id}`,
+    url: `/coursePlatform/${id}`,
     method: 'get'
   })
 }
 
 export function createPlatform(data) {
   return request({
-    url: '/platforms',
+    url: '/coursePlatform/',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function createPlatform(data) {
 
 export function updatePlatform(data) {
   return request({
-    url: `/platforms/${data.id}`,
+    url: `/coursePlatform/${data.course_platform_id}/`,
     method: 'put',
     data
   })

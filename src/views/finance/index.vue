@@ -96,10 +96,10 @@
 </template>
 
 <script>
-  import {fetchList} from '../../api/finance'
-  import waves from '../../directive/waves' // waves directive
-  import {parseTime} from '../../utils'
-  import Pagination from '../../components/Pagination' // secondary package based on el-pagination
+  import {fetchList} from '@/api/finance'
+  import waves from '@/directive/waves' // waves directive
+  import {parseTime} from '@/utils'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
     name: 'Finance',

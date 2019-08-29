@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchAgentList(query) {
   return request({
-    url: '/agentAccounts',
+    url: '/agentAccount',
     method: 'get',
     params: query
   })
@@ -10,14 +10,14 @@ export function fetchList(query) {
 
 export function fetchAgent(id) {
   return request({
-    url: `/agentAccounts/${id}`,
+    url: `/agentAccount/${id}`,
     method: 'get'
   })
 }
 
 export function createAgent(data) {
   return request({
-    url: '/agentAccounts',
+    url: '/agentAccount/',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function createAgent(data) {
 
 export function updateAgent(data) {
   return request({
-    url: `/agentAccounts/${data.id}`,
+    url: `/agentAccount/${data.agent_id}/`,
     method: 'put',
     data
   })

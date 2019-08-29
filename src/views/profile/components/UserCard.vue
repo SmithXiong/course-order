@@ -33,20 +33,20 @@
       <el-row type="flex" justify="space-between" align="center">
         <el-col :span="8">
           <i class="el-icon-user-solid"></i>
-          <span class="user-info-title">登录名称：</span>
+          <span class="user-info-title">用户邮箱：</span>
         </el-col>
         <el-col :span="16" style="text-align: right;">
-          <span class="user-info-content">{{user.name}}</span>
+          <span class="user-info-content">{{user.email}}</span>
         </el-col>
       </el-row>
       <el-divider></el-divider>
       <el-row type="flex" justify="space-between" align="center">
         <el-col :span="8">
           <i class="el-icon-user-solid"></i>
-          <span class="user-info-title">登录名称：</span>
+          <span class="user-info-title">用户角色：</span>
         </el-col>
         <el-col :span="16" style="text-align: right;">
-          <span class="user-info-content">{{user.name}}</span>
+          <span class="user-info-content">{{user.role}}</span>
         </el-col>
       </el-row>
       <el-divider></el-divider>

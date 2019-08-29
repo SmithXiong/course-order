@@ -29,7 +29,7 @@
       >
         新增
       </el-button>
-      <el-button
+<!--      <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item filter-right"
@@ -38,7 +38,7 @@
         @click="handleDownload"
       >
         导出
-      </el-button>
+      </el-button>-->
     </div>
 
     <el-table
@@ -55,22 +55,37 @@
       </el-table-column>
       <el-table-column label="用户昵称">
         <template slot-scope="scope">
-          <span>{{ scope.row.nickName }}</span>
+          <span>{{ scope.row.nickname }}</span>
         </template>
       </el-table-column>
       <el-table-column label="登录账号">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.login_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="余额" width="180px">
+      <el-table-column label="余额" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级" width="180px">
+      <el-table-column label="备注">
         <template slot-scope="scope">
-          <span>{{ scope.row.level }}</span>
+          <span>{{ scope.row.remarks }}</span>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="等级" width="80px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.level_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="上级代理" width="120px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.creator_id }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="状态" width="80px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
@@ -85,9 +100,9 @@
           >
             详情
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+<!--          <el-button size="mini" type="danger" @click="handleDelete(row)">
             删除
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -105,27 +120,41 @@
         <el-form-item label="用户名称：" prop="name">
           <el-input v-model="temp.name"/>
         </el-form-item>
-        <el-form-item label="用户昵称：" prop="nickName">
-          <el-input v-model="temp.nickName"/>
+        <el-form-item label="用户昵称：" prop="nickname">
+          <el-input v-model="temp.nickname"/>
         </el-form-item>
-        <el-form-item label="登录账号：" prop="id">
-          <el-input v-model="temp.id"/>
+        <el-form-item label="登录账号：" prop="login_id">
+          <el-input v-model="temp.login_id" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="登录密码：" prop="password">
-          <el-input :key="passwordType"
+        <el-form-item label="登录密码：" prop="login_password">
+          <!--<el-input :key="passwordType"
                     ref="password"
                     :type="passwordType"
-                    v-model="temp.password"/>
+                    autocomplete="off"
+                    v-model="temp.login_password"/>
           <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-          </span>
+          </span>-->
+          <el-input v-model="temp.login_password"/>
         </el-form-item>
-        <el-form-item label="账户余额：" prop="balance">
+        <el-form-item label="充值金额：" prop="balance">
           <el-input-number v-model.number="temp.balance" controls-position="right" :precision="2" :min="0"/>
         </el-form-item>
-        <el-form-item label="用户等级：" prop="level">
-          <el-input-number v-model.number="temp.level" controls-position="right" :precision="0" :min="1" :max="100"/>
+        <el-form-item label="用户等级：" prop="level_id">
+          <el-select v-model="temp.level_id" style="width: 120px">
+            <el-option v-for="level in levelList" :key="level.level_id" :label="level.name"
+                       :value="level.level_id"/>
+          </el-select>
         </el-form-item>
+        <el-form-item label="是否启用：" prop="status">
+          <el-radio-group v-model="temp.status">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+<!--        <el-form-item label="备注：">
+          <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"/>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
@@ -148,19 +177,22 @@
           {{temp.name}}
         </el-form-item>
         <el-form-item label="用户昵称：">
-          {{temp.nickName}}
+          {{temp.nickname}}
         </el-form-item>
         <el-form-item label="登录账号：">
-          {{temp.id}}
+          {{temp.login_id}}
         </el-form-item>
         <el-form-item label="登录密码：">
           {{temp.password}}
         </el-form-item>
-        <el-form-item label="balance：">
+        <el-form-item label="充值金额：">
           {{temp.balance}}
         </el-form-item>
         <el-form-item label="用户等级：">
-          {{temp.level}}
+          {{temp.level_id}}
+        </el-form-item>
+        <el-form-item label="上级代理：">
+          {{temp.creator_id}}
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -168,10 +200,11 @@
 </template>
 
 <script>
-  import {fetchList, fetchAgent, createAgent, updateAgent} from '../../api/agent'
-  import waves from '../../directive/waves' // waves directive
-  import {parseTime} from '../../utils'
-  import Pagination from '../../components/Pagination' // secondary package based on el-pagination
+  import {fetchAgentList, fetchAgent, createAgent, updateAgent} from '@/api/agent'
+  import {fetchLevelList} from '@/api/level'
+  import waves from '@/directive/waves' // waves directive
+  import {parseTime} from '@/utils'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
     name: 'Agent',
@@ -190,15 +223,14 @@
         },
         temp: {
           name: '',
-          address: '',
-          platformId: '',
-          pushInterval: undefined,
-          coursePrice: undefined,
-          unitPrice: undefined,
-          unitQuery: true,
-          allowinput: true,
-          DelayPush: true,
-          announcement: ''
+          nickname: '',
+          login_id: '',
+          login_password: '',
+          recharge_amount: '',
+          level_id: undefined,
+          creator_id: undefined,
+          status: true,
+          remarks: ''
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -209,18 +241,21 @@
         passwordType: 'password',
         rules: {
           name: [{required: true, message: '请输入用户名称', trigger: 'blur'}],
-          nickName: [{required: true, message: '请输入用户昵称', trigger: 'blur'}],
-          id: [{required: true, message: '请输入登录账号', trigger: 'blur'}],
-          password: [{required: true, message: '请输入登录密码', trigger: 'blur'}],
-          balance: [{required: true, message: '请输入账户余额', trigger: 'blur'}],
-          level: [{required: true, message: '请输入用户等级', trigger: 'blur'}]
+          nickname: [{required: true, message: '请输入用户昵称', trigger: 'blur'}],
+          login_id: [{required: true, message: '请输入登录账号', trigger: 'blur'}],
+          login_password: [{required: true, message: '请输入登录密码', trigger: 'blur'}],
+          balance: [{required: true, message: '请输入充值金额', trigger: 'blur'}],
+          level_id: [{required: true, message: '请输入用户等级', trigger: 'blur'}],
+          status: [{required: true, message: '请选择是否启用', trigger: 'blur'}]
         },
         downloadLoading: false,
         dialogReadVisible: false,
+        levelList: []
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.getLevelList()
     },
     mounted() {
 
@@ -228,14 +263,19 @@
     methods: {
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchAgentList(this.listQuery).then(response => {
           this.list = response.data.list;
-          this.total = response.data.pageInfo.total;
-
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          this.total = response.data.total;
+          this.listLoading = false;
+        })
+      },
+      getLevelList() {
+        fetchLevelList({
+          page: 1,
+          pageSize: 100,
+          status: true
+        }).then(response => {
+          this.levelList = response.data.list;
         })
       },
       handleFilter() {
@@ -254,11 +294,14 @@
       resetTemp() {
         this.temp = {
           name: '',
-          nickName: '',
-          id: '',
-          password: '',
-          balance: undefined,
-          level: undefined,
+          nickname: '',
+          login_id: '',
+          login_password: '',
+          balance: '',
+          level_id: undefined,
+          creator_id: undefined,
+          status: true,
+          remarks: ''
         }
       },
       showPwd() {
@@ -283,12 +326,12 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             createAgent(this.temp).then(() => {
-              this.list.unshift(this.temp);
               this.dialogFormVisible = false;
               this.$message({
                 message: '新增成功',
                 type: 'success'
-              })
+              });
+              this.getList()
             })
           }
         })
@@ -305,18 +348,12 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             updateAgent(this.temp).then(() => {
-              for (const v of this.list) {
-                if (v.id === this.temp.id) {
-                  const index = this.list.indexOf(v);
-                  this.list.splice(index, 1, this.temp);
-                  break
-                }
-              }
               this.dialogFormVisible = false;
               this.$message({
                 message: '更新成功',
                 type: 'success'
-              })
+              });
+              this.getList();
             })
           }
         })
