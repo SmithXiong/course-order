@@ -147,7 +147,7 @@
 </template>
 
 <script>
-  import {fetchList} from '@/api/orders'
+  import {fetchOrderList,fetchOrder,createOrder,updateOrder} from '@/api/orders'
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -192,14 +192,10 @@
           params.end = params.date[1];
         }
         delete params.date;
-        fetchList(params).then(response => {
+        fetchOrderList(params).then(response => {
           this.list = response.data.list;
-          this.total = response.data.pageInfo.total;
-
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          this.total = response.data.total;
+          this.listLoading = false;
         })
       },
       handleFilter() {

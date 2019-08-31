@@ -83,7 +83,7 @@
       cropSuccess(resData) {
         this.imagecropperShow = false;
         this.imagecropperKey = this.imagecropperKey + 1;
-        this.image = resData.files.avatar
+        this.user.avatar = resData
       },
       close() {
         this.imagecropperShow = false

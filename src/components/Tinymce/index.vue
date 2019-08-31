@@ -12,7 +12,7 @@
   import plugins from './plugins'
   import toolbar from './toolbar'
   import load from './dynamicLoadScript'
-  import {getToken} from '@/api/qiniu'
+  import {uploadFile} from '@/api/qiniu'
 
 
   // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
@@ -147,40 +147,24 @@
               _this.fullscreen = e.state
             })
           },
-          // 整合七牛上传
-          // images_dataimg_filter(img) {
-          //   setTimeout(() => {
-          //     const $image = $(img);
-          //     $image.removeAttr('width');
-          //     $image.removeAttr('height');
-          //     if ($image[0].height && $image[0].width) {
-          //       $image.attr('data-wscntype', 'image');
-          //       $image.attr('data-wscnh', $image[0].height);
-          //       $image.attr('data-wscnw', $image[0].width);
-          //       $image.addClass('wscnph');
-          //     }
-          //   }, 0);
-          //   return img
-          // },
           images_upload_handler(blobInfo, success, failure, progress) {
-            /*progress(0);
-            const token = _this.$store.getters.token;
-            getToken(token).then(response => {
-              const url = response.data.qiniu_url;
-              const formData = new FormData();
-              formData.append('token', response.data.qiniu_token);
-              formData.append('key', response.data.qiniu_key);
-              formData.append('file', blobInfo.blob(), url);
-              upload(formData).then(() => {
+            progress(0);
+            const formData = new FormData();
+            formData.append('file', blobInfo.blob());
+            uploadFile(formData).then((res) => {
+              if (res && res.data && res.data.attachment_uri) {
+                let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
                 success(url);
                 progress(100);
-              })
+              } else {
+                failure('出现未知问题，刷新页面，或者联系程序员');
+              }
             }).catch(err => {
-              failure('出现未知问题，刷新页面，或者联系程序员')
+              failure('出现未知问题，刷新页面，或者联系程序员');
               console.log(err);
-            });*/
-            const img = 'data:image/jpeg;base64,' + blobInfo.base64();
-            success(img)
+            });
+            /*const img = 'data:image/jpeg;base64,' + blobInfo.base64();
+            success(img)*/
           },
         })
       },

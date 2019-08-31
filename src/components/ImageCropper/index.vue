@@ -110,7 +110,7 @@
 <script>
 /* eslint-disable */
 'use strict';
-import request from '@/utils/request'
+import {uploadFile} from '@/api/qiniu'
 import language from './utils/language.js'
 import mimes from './utils/mimes.js'
 import data2blob from './utils/data2blob.js'
@@ -120,7 +120,7 @@ export default {
     // 域，上传文件name，触发事件会带上（如果一个页面多个图片上传控件，可以做区分
     field: {
       type: String,
-      'default': 'avatar'
+      'default': 'file'
     },
     // 原名key，类似于id，触发事件会带上（如果一个页面多个图片上传控件，可以做区分
     ki: {
@@ -824,13 +824,10 @@ export default {
       that.reset();
       that.loading = 1;
       that.setStep(3);
-      request({
-        url,
-        method: 'post',
-        data: fmData
-      }).then(resData => {
+      uploadFile(fmData).then((res) => {
         that.loading = 2;
-        that.$emit('crop-upload-success', resData.data)
+        let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
+        that.$emit('crop-upload-success', url)
       }).catch(err => {
         if (that.value) {
           that.loading = 3;
@@ -838,7 +835,7 @@ export default {
           that.errorMsg = lang.fail;
           that.$emit('crop-upload-fail', err, field, ki)
         }
-      })
+      });
     },
     closeHandler(e) {
       if (this.value && (e.key == 'Escape' || e.keyCode == 27)) {

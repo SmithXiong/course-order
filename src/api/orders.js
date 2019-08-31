@@ -1,31 +1,31 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchOrderList(query) {
   return request({
-    url: '/orders',
+    url: '/order',
     method: 'get',
     params: query
   })
 }
 
-export function fetchPlatform(id) {
+export function fetchOrder(id) {
   return request({
-    url: `/platforms/${id}`,
+    url: `/order/${id}`,
     method: 'get'
   })
 }
 
-export function createPlatform(data) {
+export function createOrder(data) {
   return request({
-    url: '/platforms',
+    url: '/order/',
     method: 'post',
     data
   })
 }
 
-export function updatePlatform(data) {
+export function updateOrder(data) {
   return request({
-    url: `/platforms/${data.id}`,
+    url: `/order/${data.id}/`,
     method: 'put',
     data
   })

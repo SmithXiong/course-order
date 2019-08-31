@@ -6,3 +6,11 @@ export function getToken() {
     method: 'get'
   })
 }
+
+export function uploadFile(data) {
+  return request({
+    url: '/attachment/',
+    method: 'post',
+    data,
+  })
+}
