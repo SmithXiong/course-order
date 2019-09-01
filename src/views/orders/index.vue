@@ -72,6 +72,7 @@
 
     <el-table
       v-loading="listLoading"
+      ref="orderTable"
       :data="list"
       border
       fit
@@ -82,14 +83,14 @@
         type="selection"
         width="40px">
       </el-table-column>
-      <el-table-column label="订单号" width="150px">
+      <el-table-column label="订单号" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderNumber }}</span>
+          <span>{{ scope.row.order_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户账号" width="120px">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户密码" width="120px">
@@ -97,34 +98,34 @@
           <span>{{ scope.row.password }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" width="120px">
+<!--      <el-table-column label="用户昵称" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.nickName }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="平台名" width="120px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.platformName }}</span>
-        </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="课程名" width="120px">
         <template slot-scope="scope">
-          <span>{{ scope.row.courseName }}</span>
+          <span>{{ scope.row.course_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下单内容">
+      <el-table-column label="下单类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderContent }}</span>
+          <span>{{ scope.row.order_type === '1' ? '整本' : scope.row.order_type === '2' ? '单元' : '考试' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="花费" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.cost }}</span>
+          <span>{{ scope.row.price }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="160px">
         <template slot-scope="scope">
-          <span>{{ scope.row.createAt | parseTime }}</span>
+          <span>{{ scope.row.created_at | parseTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="120px">
+        <template slot-scope="scope">
+          <span>{{ statusList[scope.row.status] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="160px" class-name="small-padding fixed-width">
@@ -143,6 +144,32 @@
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList"/>
+    <el-dialog title="修改状态" :visible.sync="dialogFormVisible" width="550px">
+      <el-form
+        ref="dataForm"
+        :model="temp"
+        label-position="left"
+        label-width="120px"
+        style="width: 450px; margin-left:30px;"
+      >
+        <el-form-item label="状态：" label-width="100" :rules="{
+      required: true, message: '请选择订单状态', trigger: 'blur'
+    }">
+          <el-select v-model="temp.status" style="width: 120px" >
+            <el-option v-for="item in Object.keys(statusList)" :key="item" :label="statusList[item]"
+                       :value="item"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updateStatus()">
+          确定
+        </el-button>
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -172,9 +199,20 @@
           start: undefined,
           end: undefined
         },
+        statusList: {
+          '1': '已完成',
+          '2': '排队中',
+          '3': '执⾏中',
+          '4': '待考试',
+          '5': '密码错误'
+        },
         tableSelection: [],
         statusLoading: false,
-        downloadLoading: false
+        downloadLoading: false,
+        temp: {
+          status: undefined
+        },
+        dialogFormVisible: false
       }
     },
     created() {
@@ -227,16 +265,40 @@
             type: 'warning'
           })
         }
-        this.statusLoading = true;
-        setTimeout(() => {
-          this.statusLoading = false
-        }, 1.5 * 1000)
+        this.temp.status = undefined;
+        this.dialogFormVisible = true;
+      },
+      updateStatus() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            let data = {
+              update: {
+                key: 'status',
+                value: this.temp.status,
+                order_id: this.tableSelection.map(o => o.order_id)
+              }
+            };
+            updateOrder(data).then(res => {
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
+              this.dialogFormVisible = false;
+              this.$refs.orderTable.clearSelection();
+              this.getList()
+            })
+          }
+        })
       },
       handleUpdate(row) {
-
+        this.temp.status = undefined;
+        this.dialogFormVisible = true;
+        this.$refs.orderTable.toggleRowSelection(row);
       },
       handleReset(row) {
-
+        this.temp.status = undefined;
+        this.dialogFormVisible = true;
+        this.$refs.orderTable.toggleRowSelection(row);
       },
       handleDownload() {
         if(this.tableSelection.length === 0) {

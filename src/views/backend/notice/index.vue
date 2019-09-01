@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="公告内容">
         <template slot-scope="scope">
-          <span>{{ scope.row.content }}</span>
+          <span v-html="scope.row.content">{{ scope.row.content }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="80" class-name="small-padding fixed-width">
@@ -247,7 +247,7 @@
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            updateNotice(this.temp).then(() => {
+            createNotice(this.temp).then(() => {
               this.dialogFormVisible = false;
               this.$message({
                 message: '更新成功',

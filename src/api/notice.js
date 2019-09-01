@@ -8,9 +8,9 @@ export function fetchNoticeList(query) {
   })
 }
 
-export function fetchNotice(id) {
+export function fetchNotice() {
   return request({
-    url: `/announcement/${id}`,
+    url: `/announcement/`,
     method: 'get'
   })
 }
@@ -25,7 +25,7 @@ export function createNotice(data) {
 
 export function updateNotice(data) {
   return request({
-    url: `/announcement/${data.level_id}/`,
+    url: `/announcement/`,
     method: 'put',
     data
   })

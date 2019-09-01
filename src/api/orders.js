@@ -25,8 +25,8 @@ export function createOrder(data) {
 
 export function updateOrder(data) {
   return request({
-    url: `/order/${data.id}/`,
-    method: 'put',
+    url: `/order/`,
+    method: 'patch',
     data
   })
 }

@@ -224,14 +224,14 @@ export const asyncRoutes = [
           title: '平台管理'
         }
       },
-      {
+/*      {
         path: 'online',
         component: () => import('@/views/backend/online/index'),
         name: 'Online',
         meta: {
           title: '在线用户'
         }
-      },
+      },*/
 /*      {
         path: 'directive',
         component: () => import('@/views/permission/directive'),

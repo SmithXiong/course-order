@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchFinaList(query) {
   return request({
-    url: '/finance',
+    url: '/financialManagement/',
     method: 'get',
     params: query
   })

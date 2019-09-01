@@ -24,13 +24,13 @@
     </el-row>
     <el-row type="flex" justify="center" align="center" :gutter="20">
       <el-col :span="12">
-        <el-card header="公告一" :body-style="{padding:'15px'}">
-          <span class="card-info">{{20}}</span>
+        <el-card header="首页公告" :body-style="{padding:'15px'}">
+          <span class="card-info" v-html="homeNotice"></span>
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card header="公告二" :body-style="{padding:'15px'}">
-          <span class="card-info">{{20}}</span>
+        <el-card header="等级公告" :body-style="{padding:'15px'}">
+          <span class="card-info">{{levelNotice}}</span>
         </el-card>
       </el-col>
     </el-row>
@@ -39,6 +39,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import {fetchNoticeList} from '@/api/notice'
 
   export default {
     name: 'Dashboard',
@@ -48,7 +49,9 @@
         orderNum: 20,
         balance: 9.9,
         level: 10,
-        agent: 5
+        agent: 5,
+        homeNotice: '',
+        levelNotice: ''
       }
     },
     computed: {
@@ -59,6 +62,14 @@
     created() {
       if (!this.roles.includes('admin')) {
         this.currentRole = 'editorDashboard'
+      }
+      this.getNotice()
+    },
+    methods: {
+      getNotice() {
+        fetchNoticeList({type:'1'}).then(response => {
+          this.homeNotice = response.data.list[0].content;
+        })
       }
     }
   }

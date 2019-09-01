@@ -22,7 +22,7 @@
               <i class="el-icon-s-promotion"></i>
               <p class="course-notice">请注意：下单格式修改为《账号 空格 密码》，多个请换行；</p>
             </el-form-item>
-            <el-form-item label-width="95px" label="下单类型：" prop="orderType">
+<!--            <el-form-item label-width="95px" label="下单类型：" prop="orderType">
               <el-select v-model="temp.orderType" placeholder="请选择">
                 <el-option
                   v-for="item in options"
@@ -31,7 +31,7 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label-width="95px" label="课程单元：" prop="unit">
               <el-switch
                 v-model="temp.unit"
@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" icon="el-icon-circle-check" @click="onLoadCourse">加载课程</el-button>
-              <el-button type="primary" icon="el-icon-circle-plus-outline" @cancel="onSubmit">确认下单</el-button>
+              <el-button type="primary" icon="el-icon-circle-plus-outline" @click="onSubmit">确认下单</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -65,7 +65,8 @@
 </template>
 
 <script>
-  import {fetchCourse} from '@/api/course'
+  import {fetchCourse, createOrder} from '@/api/course'
+  import {fetchPlatform} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
 
   export default {
@@ -91,7 +92,7 @@
             this.temp.accountList = list.map(o => {
               let arr = o.trim().split(/\s+/);
               return {
-                name: arr[0],
+                account: arr[0],
                 password: arr[1]
               }
             });
@@ -103,47 +104,14 @@
       };
       return {
         fullLoading: false,
-        courseTree: [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-1',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          label: '一级 2',
-          children: [{
-            id: 5,
-            label: '二级 2-1'
-          }, {
-            id: 6,
-            label: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }],
+        courseTree: [],
         treeLoading: false,
         treeProps: {
           children: 'children',
           label: 'label'
         },
         courseDetail: {
+          platform_id: '',
           name: '',
           announcement: ''
         },
@@ -158,7 +126,7 @@
         ],
         temp: {
           accounts: '',
-          orderType: '1',
+          //orderType: '1',
           unit: false,
           accountList: []
         },
@@ -170,20 +138,17 @@
       }
     },
     created() {
-      this.getCourseDetail()
+      this.getPlatformDetail()
     },
     mounted() {
 
     },
     methods: {
-      getCourseDetail() {
+      getPlatformDetail() {
         this.fullLoading = true;
-        fetchCourse(this.$route.params.id).then(response => {
-          this.courseDetail = {...response.data, name: '优学院', announcement: '图片容器，在保留原生img的特性下，支持懒加载，自定义占位、加载失败等。'};
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.fullLoading = false
-          }, 1.5 * 1000)
+        fetchPlatform(this.$route.params.id).then(response => {
+          this.courseDetail = {...response.data};
+          this.fullLoading = false;
         })
       },
       handleFilter() {
@@ -202,7 +167,43 @@
       onLoadCourse() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log(this.temp.accountList)
+            this.treeLoading = true;
+            let data = {
+              platform_id: this.courseDetail.platform_id,
+              type: this.temp.unit ? '2' : '1',
+              data: this.temp.accountList
+            };
+            console.log(data)
+            fetchCourse(data).then(response => {
+              let data = response.data || [];
+              data = data.filter(o => o.code === '1');
+              data = data.map(o => {
+                return {
+                  id: o.id,
+                  label: o.account + '   ' + o.password,
+                  type: 'parent',
+                  children: o.course.map(m => {
+                    return {
+                      id: m.id,
+                      label: m.name,
+                      type: 'course',
+                      account: o.account,
+                      password: o.password,
+                      children: m.unit && m.unit.map(n => {
+                        return {
+                          id: n.id,
+                          label: n.id,
+                          type: 'unit',
+                          parent: m.id
+                        }
+                      })
+                    }
+                  })
+                }
+              });
+              this.courseTree = data;
+              this.treeLoading = false;
+            })
           }
         })
       },
@@ -210,8 +211,35 @@
       onSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log(this.temp.accountList);
-            console.log(this.$refs.courseTree.getCheckedNodes())
+            let treeData = this.$refs.courseTree.getCheckedNodes();
+            console.log(treeData);
+            let courses = treeData.filter(o => o.type === 'course');
+            let units = treeData.filter(o => o.type === 'unit');
+            courses = courses.map(o => {
+              let unit = units.filter(m => m.parent === o.id).map(n => ({
+                unit_id: n.id,
+                unit_name: n.label
+              }));
+              return {
+                user_name: o.account,
+                password: o.password,
+                course_name: o.label,
+                course_id: o.id,
+                type: unit.length === o.children.length ? '1' : '2',
+                unit_info: unit.length === o.children.length ? [] : unit
+              }
+            });
+            let data = {
+              course_platform_id: this.$route.params.id,
+              agent_id: '7a051b7d978e4419aa4dc8bc39fa6f1c',
+              order_list: courses,
+            };
+            createOrder(data).then(res => {
+              this.$message({
+                message: '下单成功',
+                type: 'success'
+              });
+            })
           }
         })
       },

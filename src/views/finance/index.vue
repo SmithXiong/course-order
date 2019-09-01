@@ -30,7 +30,7 @@
       <el-button v-waves class="filter-item" type="warning" icon="el-icon-refresh" @click="resetFilter">
         重置
       </el-button>
-      <el-button
+<!--      <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item filter-right"
@@ -39,7 +39,7 @@
         @click="handleDownload"
       >
         导出
-      </el-button>
+      </el-button>-->
     </div>
 
     <el-table
@@ -51,42 +51,42 @@
     >
       <el-table-column label="订单号">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderNumber }}</span>
+          <span>{{ scope.row.order_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="流水类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.flowType }}</span>
+          <span>{{ orderTypes[scope.row.transaction_type] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="流水信息">
+<!--      <el-table-column label="流水信息">
         <template slot-scope="scope">
           <span>{{ scope.row.flowInfo }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="流水时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.createAt | parseTime }}</span>
+          <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户昵称" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.nickName }}</span>
+          <span>{{ scope.row.transaction_object_login_nickname }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户账号" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.transaction_object_login_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作前余额" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.balanceBefore }}</span>
+          <span>{{ scope.row.pre_operation_balance }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作后余额" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.balanceAfter }}</span>
+          <span>{{ scope.row.after_operation_balance }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-  import {fetchList} from '@/api/finance'
+  import {fetchFinaList} from '@/api/finance'
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -120,6 +120,13 @@
           end: undefined
         },
         typeList: ['支出', '收入'],
+        orderTypes: {
+          '1': '订单⽀付',
+          '2': '上级充值',
+          '3': '执⾏管理员充值',
+          '4': '下级佣⾦',
+          '5': '开户⽀出'
+        },
         downloadLoading: false
       }
     },
@@ -138,14 +145,10 @@
           params.end = params.date[1];
         }
         delete params.date;
-        fetchList(params).then(response => {
+        fetchFinaList(params).then(response => {
           this.list = response.data.list;
-          this.total = response.data.pageInfo.total;
-
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          this.total = response.data.total;
+          this.listLoading = false;
         })
       },
       handleFilter() {

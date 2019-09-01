@@ -10,7 +10,7 @@ export function fetchPlatformList(query) {
 
 export function fetchPlatform(id) {
   return request({
-    url: `/coursePlatform/${id}`,
+    url: `/coursePlatform/${id}/`,
     method: 'get'
   })
 }

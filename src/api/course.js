@@ -1,24 +1,16 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchCourse(data) {
   return request({
-    url: '/course-list',
-    method: 'get',
-    params: query
+    url: `/course/`,
+    method: 'post',
+    data
   })
 }
 
-export function fetchCourse(id) {
+export function createOrder(data) {
   return request({
-    url: `/course`,
-    method: 'get',
-    params: {id}
-  })
-}
-
-export function createPlatform(data) {
-  return request({
-    url: '/platforms',
+    url: '/order/',
     method: 'post',
     data
   })
