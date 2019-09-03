@@ -88,12 +88,12 @@
           <span>{{ scope.row.order_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户账号" width="120px">
+      <el-table-column label="用户账号" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户密码" width="120px">
+      <el-table-column label="用户密码" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.password }}</span>
         </template>
@@ -103,12 +103,12 @@
           <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="课程名" width="120px">
+      <el-table-column label="课程名">
         <template slot-scope="scope">
           <span>{{ scope.row.course_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下单类型">
+      <el-table-column label="下单类型" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.order_type === '1' ? '整本' : scope.row.order_type === '2' ? '单元' : '考试' }}</span>
         </template>
@@ -144,18 +144,18 @@
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList"/>
-    <el-dialog title="修改状态" :visible.sync="dialogFormVisible" width="550px">
+    <el-dialog title="修改状态" :visible.sync="dialogFormVisible" width="400px">
       <el-form
         ref="dataForm"
         :model="temp"
         label-position="left"
         label-width="120px"
-        style="width: 450px; margin-left:30px;"
+        style="width: 300px; margin-left:30px;"
       >
         <el-form-item label="状态：" label-width="100" :rules="{
       required: true, message: '请选择订单状态', trigger: 'blur'
     }">
-          <el-select v-model="temp.status" style="width: 120px" >
+          <el-select v-model="temp.status" style="width: 150px" >
             <el-option v-for="item in Object.keys(statusList)" :key="item" :label="statusList[item]"
                        :value="item"/>
           </el-select>
@@ -309,8 +309,8 @@
         }
         this.downloadLoading = true;
         import('../../vendor/Export2Excel').then(excel => {
-          const tHeader = ['订单号', '登录账号', '用户昵称', '登录密码', '平台名', '课程名', '费用', '创建时间'];
-          const filterVal = ['orderNumber', 'id', 'nickName', 'password', 'platformName', 'courseName', 'cost', 'createAt'];
+          const tHeader = ['订单号', '登录账号', '登录密码', '下单类型', '课程名', '费用', '创建时间', '状态'];
+          const filterVal = ['order_id', 'user_name', 'password', 'order_type', 'course_name', 'price', 'created_at', 'status'];
           const data = this.formatJson(filterVal, this.tableSelection);
           excel.export_json_to_excel({
             header: tHeader,
@@ -322,8 +322,12 @@
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {
-          if (j === 'timestamp') {
+          if (j === 'created_at') {
             return parseTime(v[j])
+          } else if (j === 'status') {
+            return this.statusList[v[j]]
+          } else if (j === 'order_type') {
+            return v[j] === '1' ? '整本' : v[j] === '2' ? '单元' : '考试'
           } else {
             return v[j]
           }

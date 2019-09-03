@@ -68,6 +68,7 @@
   import {fetchCourse, createOrder} from '@/api/course'
   import {fetchPlatform} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
+  import {uuid} from '@/utils/index'
 
   export default {
     name: 'CourseOrder',
@@ -169,17 +170,17 @@
           if (valid) {
             this.treeLoading = true;
             let data = {
-              platform_id: this.courseDetail.platform_id,
+              course_platform_id: this.$route.params.id,
               type: this.temp.unit ? '2' : '1',
               data: this.temp.accountList
             };
             console.log(data)
             fetchCourse(data).then(response => {
               let data = response.data || [];
-              data = data.filter(o => o.code === '1');
+              data = data.filter(o => o.code === 1);
               data = data.map(o => {
                 return {
-                  id: o.id,
+                  id: uuid(),
                   label: o.account + '   ' + o.password,
                   type: 'parent',
                   children: o.course.map(m => {
@@ -192,7 +193,7 @@
                       children: m.unit && m.unit.map(n => {
                         return {
                           id: n.id,
-                          label: n.id,
+                          label: n.name,
                           type: 'unit',
                           parent: m.id
                         }
@@ -211,8 +212,14 @@
       onSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            let treeData = this.$refs.courseTree.getCheckedNodes();
-            console.log(treeData);
+            let treeData = this.$refs.courseTree.getCheckedNodes().concat(this.$refs.courseTree.getHalfCheckedNodes());
+            console.log(this.$refs.courseTree);
+            if (treeData.length === 0) {
+              return this.$message({
+                message: '请选择课程',
+                type: 'warning'
+              });
+            }
             let courses = treeData.filter(o => o.type === 'course');
             let units = treeData.filter(o => o.type === 'unit');
             courses = courses.map(o => {
@@ -239,6 +246,7 @@
                 message: '下单成功',
                 type: 'success'
               });
+              this.$router.replace({name: 'Orders'})
             })
           }
         })

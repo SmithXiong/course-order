@@ -2,10 +2,11 @@
   <el-card style="margin-bottom:20px;" header="个人资料">
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-        </pan-thumb>
+        <!--<pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
+        </pan-thumb>-->
+        <svg-icon icon-class="profile" style="width: 100px;height: 100px;" />
       </div>
-      <div class="box-center">
+<!--      <div class="box-center">
         <el-button type="primary" class="text-center" @click="imagecropperShow=true">修改头像</el-button>
       </div>
       <image-cropper
@@ -15,7 +16,7 @@
         lang-type="zh"
         @close="close"
         @crop-upload-success="cropSuccess"
-      />
+      />-->
     </div>
 
     <div class="user-info">
@@ -33,10 +34,20 @@
       <el-row type="flex" justify="space-between" align="center">
         <el-col :span="8">
           <i class="el-icon-user-solid"></i>
-          <span class="user-info-title">用户邮箱：</span>
+          <span class="user-info-title">用户等级：</span>
         </el-col>
         <el-col :span="16" style="text-align: right;">
-          <span class="user-info-content">{{user.email}}</span>
+          <span class="user-info-content">{{user.level}}</span>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
+      <el-row type="flex" justify="space-between" align="center">
+        <el-col :span="8">
+          <i class="el-icon-user-solid"></i>
+          <span class="user-info-title">上级名称：</span>
+        </el-col>
+        <el-col :span="16" style="text-align: right;">
+          <span class="user-info-content">{{user.creator}}</span>
         </el-col>
       </el-row>
       <el-divider></el-divider>

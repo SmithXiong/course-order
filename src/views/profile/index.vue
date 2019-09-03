@@ -10,9 +10,9 @@
         <el-col :span="18" :xs="24">
           <el-card header="基本资料">
             <el-tabs v-model="activeTab">
-              <el-tab-pane label="基本资料" name="profile">
+              <!--<el-tab-pane label="基本资料" name="profile">
                 <account :user="user" />
-              </el-tab-pane>
+              </el-tab-pane>-->
               <el-tab-pane label="修改密码" name="password">
                 <password :user="user" />
               </el-tab-pane>
@@ -37,14 +37,15 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'profile'
+      activeTab: 'password'
     }
   },
   computed: {
     ...mapGetters([
       'name',
       'avatar',
-      'roles'
+      'roles',
+      'userInfo'
     ])
   },
   created() {
@@ -55,8 +56,8 @@ export default {
       this.user = {
         name: this.name,
         role: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
+        level: this.userInfo.level_name,
+        creator: this.userInfo.creator_name
       }
     }
   }

@@ -22,14 +22,19 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="平台ID">
+      <el-table-column label="平台ID" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.platform_id }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台名称">
+      <el-table-column label="平台名称" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台公告">
+        <template slot-scope="scope">
+          <span v-html="scope.row.announcement">{{ scope.row.announcement }}</span>
         </template>
       </el-table-column>
 <!--      <el-table-column label="课程单价" width="80px">

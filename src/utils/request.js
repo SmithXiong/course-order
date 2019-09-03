@@ -2,6 +2,8 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import Router from 'vue-router'
+import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
@@ -19,7 +21,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = `Token ${getToken()}`
     }
     return config
   },
@@ -46,7 +48,7 @@ service.interceptors.response.use(
     const res = response.data;
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code === 'HTTP_200_OK' || res.code === 'HTTP_201_CREATED') {
+    if (res.code === 'HTTP_200_OK' || res.code === 'HTTP_201_CREATED' || res.auth_token || response.status === 204) {
       return res
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
 /*      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
@@ -76,11 +78,25 @@ service.interceptors.response.use(
     if (error.response && error.response.data && error.response.data.message) {
       message = error.response.data.message
     }
+    if (error.response && error.response.data && error.response.data.non_field_errors) {
+      message = error.response.data.non_field_errors[0]
+    }
     Message({
       message: message,
       type: 'error',
       duration: 5 * 1000
     });
+    if (error.response && error.response.status && (error.response.status === 401 || error.response.status === 403)) {
+      MessageBox.confirm('您必须重新登录', '确认退出', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('user/resetToken').then(() => {
+          router.replace({name: 'Login'})
+        })
+      })
+    }
     return Promise.reject(error)
   }
 );

@@ -10,7 +10,7 @@
       />
       <span class="filter-label">平台状态：</span>
       <el-select v-model="listQuery.status" placeholder="所有" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in statusList" :key="item" :label="item" :value="item"/>
+        <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -309,7 +309,13 @@
           name: undefined,
           status: undefined
         },
-        statusList: ['正常', '异常'],
+        statusList: [{
+          label: '启用',
+          value: true
+        },{
+          label: '禁用',
+          value: false
+        }],
         temp: {
           name: '',
           address: '',

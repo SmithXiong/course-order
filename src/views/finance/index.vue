@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <span class="filter-label">流水类型：</span>
-      <el-select v-model="listQuery.flowType" placeholder="所有" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in typeList" :key="item" :label="item" :value="item"/>
+      <el-select v-model="listQuery.flowType" placeholder="所有" clearable style="width: 150px" class="filter-item">
+        <el-option v-for="item in Object.keys(orderTypes)" :key="item" :label="orderTypes[item]" :value="item"/>
       </el-select>
       <span class="filter-label">流水用户：</span>
       <el-input

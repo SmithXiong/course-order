@@ -45,6 +45,7 @@ export const constantRoutes = [
     ]
   },
   {
+    name: 'Login',
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -68,7 +69,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 's-home', affix: true }
+        meta: { title: '首页', icon: 's-home', affix: true, noCache: true }
       }
     ]
   },
@@ -83,7 +84,8 @@ export const constantRoutes = [
         name: 'Course',
         meta: {
           title: '课堂下单',
-          icon: 's-order'
+          icon: 's-goods',
+          noCache: true
         }
       },
       {
@@ -93,7 +95,8 @@ export const constantRoutes = [
         hidden: true,
         meta: {
           title: '课堂下单',
-          icon: 's-order'
+          icon: 's-goods',
+          noCache: true
         }
       }]
   },
@@ -108,7 +111,8 @@ export const constantRoutes = [
         name: 'Orders',
         meta: {
           title: '订单查询',
-          icon: 's-order'
+          icon: 's-order',
+          noCache: true
         }
       }]
   },
@@ -123,7 +127,8 @@ export const constantRoutes = [
         name: 'Finance',
         meta: {
           title: '财务管理',
-          icon: 's-finance'
+          icon: 's-finance',
+          noCache: true
         }
       }]
   },
@@ -138,7 +143,8 @@ export const constantRoutes = [
         name: 'Agent',
         meta: {
           title: '代理管理',
-          icon: 'user-solid'
+          icon: 'user-solid',
+          noCache: true
         }
       }]
   },
@@ -205,7 +211,8 @@ export const asyncRoutes = [
         component: () => import('@/views/backend/notice/index'),
         name: 'Notice',
         meta: {
-          title: '公告管理'
+          title: '公告管理',
+          noCache: true
         }
       },
       {
@@ -213,7 +220,8 @@ export const asyncRoutes = [
         component: () => import('@/views/backend/level/index'),
         name: 'Level',
         meta: {
-          title: '等级管理'
+          title: '等级管理',
+          noCache: true
         }
       },
       {
@@ -221,7 +229,17 @@ export const asyncRoutes = [
         component: () => import('@/views/backend/platform/index'),
         name: 'Platform',
         meta: {
-          title: '平台管理'
+          title: '平台管理',
+          noCache: true
+        }
+      },
+      {
+        path: 'banner',
+        component: () => import('@/views/backend/banner/index'),
+        name: 'Banner',
+        meta: {
+          title: '更换Banner',
+          noCache: true
         }
       },
 /*      {
@@ -470,7 +488,7 @@ export const asyncRoutes = [
 ];
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 });

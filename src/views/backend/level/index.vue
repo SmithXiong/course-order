@@ -73,7 +73,7 @@
       </el-table-column>
       <el-table-column label="等级公告" min-width="200px">
         <template slot-scope="scope">
-          <span>{{ scope.row.announcement }}</span>
+          <span v-html="scope.row.announcement">{{ scope.row.announcement }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
@@ -96,14 +96,14 @@
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize"
                 @pagination="getList"/>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="850px">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="left"
         label-width="120px"
-        style="width: 500px; margin-left:50px;"
+        style="width: 750px; margin-left:30px;"
       >
         <el-form-item label="等级名称：" prop="name">
           <el-input v-model="temp.name"/>
@@ -127,7 +127,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="等级公告：" prop="announcement">
-          <el-input v-model="temp.announcement" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"/>
+          <!--<el-input v-model="temp.announcement" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"/>-->
+          <Tinymce ref="editor" v-model="temp.announcement" :value="temp.announcement" :height="400" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -166,7 +167,7 @@
           {{temp.unit_query ? '是' : '否'}}
         </el-form-item>
         <el-form-item label="等级公告：">
-          {{temp.announcement}}
+          <span v-html="temp.announcement">{{temp.announcement}}</span>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -178,10 +179,11 @@
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import Tinymce from '@/components/Tinymce'
 
   export default {
     name: 'Level',
-    components: {Pagination},
+    components: {Pagination,Tinymce},
     directives: {waves},
     data() {
       return {

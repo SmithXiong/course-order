@@ -8,12 +8,12 @@
       </el-col>
       <el-col :span="6">
         <el-card header="我的余额" :body-style="{padding:'15px'}">
-          <span class="card-info">{{balance}}</span>
+          <span class="card-info">{{userInfo.balance}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card header="我的等级" :body-style="{padding:'15px'}">
-          <span class="card-info">{{level}}</span>
+          <span class="card-info">{{userInfo.level_name}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -30,7 +30,7 @@
       </el-col>
       <el-col :span="12">
         <el-card header="等级公告" :body-style="{padding:'15px'}">
-          <span class="card-info">{{levelNotice}}</span>
+          <span class="card-info" v-html="userInfo.level_announcement"></span>
         </el-card>
       </el-col>
     </el-row>
@@ -56,13 +56,10 @@
     },
     computed: {
       ...mapGetters([
-        'roles'
+        'userInfo'
       ])
     },
     created() {
-      if (!this.roles.includes('admin')) {
-        this.currentRole = 'editorDashboard'
-      }
       this.getNotice()
     },
     methods: {

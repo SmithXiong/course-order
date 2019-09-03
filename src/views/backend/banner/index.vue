@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="uploadImg"></el-button>
+    <el-button type="primary" @click="uploadImg">更换图片</el-button>
     <input v-show="false" ref="fileinput" type="file" @change="handleChange">
     <el-image
       style="width: 100%; height: 800px"
@@ -10,12 +10,13 @@
 </template>
 
 <script>
+  import {uploadFile} from "@/api/qiniu";
 
   export default {
     name: 'Banner',
     data() {
       return {
-        url: '',
+        url: process.env.VUE_APP_BACKEND + '/media/home.jpg',
       }
     },
     created() {
@@ -28,7 +29,28 @@
       handleChange(e) {
         e.preventDefault();
         const files = e.target.files || e.dataTransfer.files;
-
+        if (this.checkFile(files[0])) {
+          let file = files[0];
+          //file.name = 'home.jpg';
+          let formData = new FormData();
+          formData.append('file', file, 'home.jpg');
+          uploadFile(formData).then((res) => {
+            if (res && res.data && res.data.attachment_uri) {
+              //let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
+              this.url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
+            } else {
+              this.$message({
+                message: '上传图片出错',
+                type: 'error'
+              })
+            }
+          }).catch(err => {
+            this.$message({
+              message: '上传图片出错',
+              type: 'error'
+            })
+          });
+        }
       },
       // 检测选择的文件是否合适
       checkFile(file) {
@@ -40,7 +62,7 @@
           return false
         }
         // 超出大小
-        if (file.size / 1024 > 3) {
+        if (file.size / 1024 > 3096) {
           this.$message({
             message: '图片文件大小不能超过3MB',
             type: 'warning'

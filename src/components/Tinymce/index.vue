@@ -16,7 +16,7 @@
 
 
   // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
-  const tinymceCDN = './tinymce/tinymce.min.js';
+  const tinymceCDN = '/tinymce/tinymce.min.js';
 
   export default {
     name: 'Tinymce',
