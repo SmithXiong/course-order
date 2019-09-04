@@ -3,22 +3,22 @@
     <el-row type="flex" justify="center" align="center" :gutter="20" style="margin-bottom: 40px">
       <el-col :span="6">
         <el-card header="我的订单" :body-style="{padding:'15px'}">
-          <span class="card-info">{{orderNum}}</span>
+          <span class="card-info">{{userInfo.order_count || 0}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card header="我的余额" :body-style="{padding:'15px'}">
-          <span class="card-info">{{userInfo.balance}}</span>
+          <span class="card-info">{{userInfo.balance || 0}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card header="我的等级" :body-style="{padding:'15px'}">
-          <span class="card-info">{{userInfo.level_name}}</span>
+          <span class="card-info">{{userInfo.level_name || ''}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card header="我的代理" :body-style="{padding:'15px'}">
-          <span class="card-info">{{agent}}</span>
+          <span class="card-info">{{userInfo.subordinate_count || 0}}</span>
         </el-card>
       </el-col>
     </el-row>

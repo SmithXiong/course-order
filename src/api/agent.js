@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchAgentList(query) {
   return request({
-    url: '/agentAccount',
+    url: '/agentAccount/',
     method: 'get',
     params: query
   })

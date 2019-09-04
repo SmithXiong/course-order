@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/online',
+    url: '/online/',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchOnlineUser(id) {
   return request({
-    url: `/onlineDetail`,
+    url: `/onlineDetail/`,
     method: 'get',
     params: {id}
   })

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchOrderList(query) {
   return request({
-    url: '/order',
+    url: '/order/',
     method: 'get',
     params: query
   })

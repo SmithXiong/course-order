@@ -96,7 +96,7 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      loginBg: process.env.VUE_APP_BACKEND + '/media/home.jpg'
+      loginBg: '/media/home.jpg'
     }
   },
   watch: {

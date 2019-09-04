@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchLevelList(query) {
   return request({
-    url: '/agentLevel',
+    url: '/agentLevel/',
     method: 'get',
     params: query
   })

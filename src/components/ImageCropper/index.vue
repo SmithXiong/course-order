@@ -826,7 +826,7 @@ export default {
       that.setStep(3);
       uploadFile(fmData).then((res) => {
         that.loading = 2;
-        let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
+        let url = res.data.attachment_uri;
         that.$emit('crop-upload-success', url)
       }).catch(err => {
         if (that.value) {

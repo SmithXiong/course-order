@@ -153,7 +153,7 @@
             formData.append('file', blobInfo.blob());
             uploadFile(formData).then((res) => {
               if (res && res.data && res.data.attachment_uri) {
-                let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
+                let url = res.data.attachment_uri;
                 success(url);
                 progress(100);
               } else {
