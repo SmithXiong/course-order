@@ -32,7 +32,7 @@
                 </el-option>
               </el-select>
             </el-form-item>-->
-            <el-form-item label-width="95px" label="课程单元：" prop="unit">
+            <el-form-item v-if="courseDetail.unit_query" label-width="95px" label="课程单元：" prop="unit">
               <el-switch
                 v-model="temp.unit"
                 active-text="ON"
@@ -115,7 +115,8 @@
         courseDetail: {
           platform_id: '',
           name: '',
-          announcement: ''
+          announcement: '',
+          unit_query: false
         },
         options: [
           {

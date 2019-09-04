@@ -60,6 +60,7 @@
       </el-button>
       <el-button
         v-waves
+        v-if="userInfo.role==='admin'"
         :loading="statusLoading"
         class="filter-item filter-right"
         type="primary"
@@ -128,7 +129,7 @@
           <span>{{ statusList[scope.row.status] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="160px" class-name="small-padding fixed-width">
+      <el-table-column v-if="userInfo.role==='admin'" label="操作" align="center" width="160px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
@@ -178,6 +179,7 @@
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'Orders',
@@ -218,8 +220,10 @@
     created() {
       this.getList()
     },
-    mounted() {
-
+    computed: {
+      ...mapGetters([
+        'userInfo'
+      ])
     },
     methods: {
       getList() {

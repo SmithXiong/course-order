@@ -135,7 +135,7 @@
           <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
           </span>-->
-          <el-input v-model="temp.login_password"/>
+          <el-input :disabled="dialogStatus==='create'" v-model="temp.login_password"/>
         </el-form-item>
         <el-form-item label="充值金额：" prop="balance">
           <el-input-number v-model.number="temp.balance" controls-position="right" :precision="2" :min="0"/>
@@ -225,7 +225,7 @@
           name: '',
           nickname: '',
           login_id: '',
-          login_password: '',
+          login_password: '123456',
           recharge_amount: '',
           level_id: undefined,
           creator_id: undefined,
@@ -296,7 +296,7 @@
           name: '',
           nickname: '',
           login_id: '',
-          login_password: '',
+          login_password: '123456',
           balance: '',
           level_id: undefined,
           creator_id: undefined,
@@ -338,6 +338,7 @@
       },
       handleUpdate(row) {
         this.temp = Object.assign({}, row); // copy obj
+        console.log(this.temp)
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
         this.$nextTick(() => {
