@@ -46,10 +46,10 @@
     data() {
       return {
         fullLoading: false,
-        orderNum: 20,
-        balance: 9.9,
-        level: 10,
-        agent: 5,
+        orderNum: 0,
+        balance: 0,
+        level: '',
+        agent: 0,
         homeNotice: '',
         levelNotice: ''
       }
@@ -65,7 +65,7 @@
     methods: {
       getNotice() {
         fetchNoticeList({type:'1'}).then(response => {
-          this.homeNotice = response.data.list[0].content;
+          this.homeNotice = response.data && response.data.list.length > 0  ? response.data.list[0].content : '';
         })
       }
     }

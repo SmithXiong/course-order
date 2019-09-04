@@ -69,6 +69,7 @@
   import {fetchPlatform} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
   import {uuid} from '@/utils/index'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'CourseOrder',
@@ -137,6 +138,11 @@
           unit: [{required: true, message: '请选择是否课程单元', trigger: 'blur'}],
         }
       }
+    },
+    computed: {
+      ...mapGetters([
+        'userInfo'
+      ])
     },
     created() {
       this.getPlatformDetail()
@@ -238,7 +244,7 @@
             });
             let data = {
               course_platform_id: this.$route.params.id,
-              agent_id: '7a051b7d978e4419aa4dc8bc39fa6f1c',
+              agent_id: this.userInfo.agent_id,
               order_list: courses,
             };
             createOrder(data).then(res => {
