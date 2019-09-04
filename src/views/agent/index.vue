@@ -68,11 +68,11 @@
           <span>{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注">
+<!--      <el-table-column label="备注">
         <template slot-scope="scope">
           <span>{{ scope.row.remarks }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 <!--      <el-table-column label="等级" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.level_id }}</span>
