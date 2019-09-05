@@ -22,11 +22,11 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="平台ID" width="80px">
+<!--      <el-table-column label="平台ID" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="平台名称" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>

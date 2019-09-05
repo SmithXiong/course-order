@@ -53,14 +53,19 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称">
+<!--      <el-table-column label="用户昵称">
         <template slot-scope="scope">
           <span>{{ scope.row.nickname }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="登录账号">
         <template slot-scope="scope">
           <span>{{ scope.row.login_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="登录密码">
+        <template slot-scope="scope">
+          <span>{{ scope.row.login_password }}</span>
         </template>
       </el-table-column>
       <el-table-column label="余额" width="80px">
@@ -86,6 +91,11 @@
       <el-table-column label="状态" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" width="180px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
@@ -120,9 +130,9 @@
         <el-form-item label="用户名称：" prop="name">
           <el-input v-model="temp.name"/>
         </el-form-item>
-        <el-form-item label="用户昵称：" prop="nickname">
+<!--        <el-form-item label="用户昵称：" prop="nickname">
           <el-input v-model="temp.nickname"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="登录账号：" prop="login_id">
           <el-input v-model="temp.login_id" autocomplete="off"/>
         </el-form-item>
@@ -176,9 +186,9 @@
         <el-form-item label="用户名称：">
           {{temp.name}}
         </el-form-item>
-        <el-form-item label="用户昵称：">
+<!--        <el-form-item label="用户昵称：">
           {{temp.nickname}}
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="登录账号：">
           {{temp.login_id}}
         </el-form-item>
@@ -223,7 +233,6 @@
         },
         temp: {
           name: '',
-          nickname: '',
           login_id: '',
           login_password: '123456',
           recharge_amount: '',
@@ -294,7 +303,6 @@
       resetTemp() {
         this.temp = {
           name: '',
-          nickname: '',
           login_id: '',
           login_password: '123456',
           balance: '',

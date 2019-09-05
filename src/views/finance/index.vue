@@ -64,16 +64,16 @@
           <span>{{ scope.row.flowInfo }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="流水时间">
+      <el-table-column label="流水时间" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" width="180px">
+<!--      <el-table-column label="用户昵称" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.transaction_object_login_nickname }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="用户账号" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.transaction_object_login_id }}</span>
@@ -125,7 +125,9 @@
           '2': '上级充值',
           '3': '管理员充值',
           '4': '下级佣⾦',
-          '5': '开户⽀出'
+          '5': '开户⽀出',
+          '6': '充值折扣',
+          '7': '下级充值',
         },
         downloadLoading: false
       }
