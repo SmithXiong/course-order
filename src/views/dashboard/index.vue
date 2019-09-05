@@ -38,34 +38,46 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import {fetchNoticeList} from '@/api/notice'
+  import {getInfo} from '@/api/user'
 
   export default {
     name: 'Dashboard',
     data() {
       return {
         fullLoading: false,
-        orderNum: 0,
-        balance: 0,
-        level: '',
-        agent: 0,
         homeNotice: '',
-        levelNotice: ''
+        userInfo: {
+          orderNum: 0,
+          balance: 0,
+          level: '',
+          agent: 0,
+          levelNotice: ''
+        }
       }
     },
-    computed: {
-      ...mapGetters([
-        'userInfo'
-      ])
-    },
     created() {
-      this.getNotice()
+      this.getNotice();
+      this.getUserInfo()
     },
     methods: {
       getNotice() {
         fetchNoticeList({type:'1'}).then(response => {
           this.homeNotice = response.data && response.data.list.length > 0  ? response.data.list[0].content : '';
+        })
+      },
+      getUserInfo() {
+        this.fullLoading = true;
+        getInfo().then(response => {
+          const { data } = response;
+          this.userInfo = data;
+          this.fullLoading = false;
+        }).catch(error => {
+          this.fullLoading = false;
+          this.$message({
+            message: '获取用户信息失败',
+            type: 'warning'
+          })
         })
       }
     }

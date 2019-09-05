@@ -49,12 +49,12 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="订单号">
+      <el-table-column label="订单号" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.order_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="流水类型">
+      <el-table-column label="流水类型" width="180px">
         <template slot-scope="scope">
           <span>{{ orderTypes[scope.row.transaction_type] }}</span>
         </template>
@@ -64,11 +64,6 @@
           <span>{{ scope.row.flowInfo }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="流水时间" width="180px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at | parseTime }}</span>
-        </template>
-      </el-table-column>
 <!--      <el-table-column label="用户昵称" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.transaction_object_login_nickname }}</span>
@@ -87,6 +82,11 @@
       <el-table-column label="操作后余额" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.after_operation_balance }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="流水时间" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
     </el-table>
