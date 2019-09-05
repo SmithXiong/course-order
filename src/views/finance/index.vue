@@ -2,12 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <span class="filter-label">流水类型：</span>
-      <el-select v-model="listQuery.flowType" placeholder="所有" clearable style="width: 150px" class="filter-item">
+      <el-select v-model="listQuery.transaction_type" placeholder="所有" clearable style="width: 150px" class="filter-item">
         <el-option v-for="item in Object.keys(orderTypes)" :key="item" :label="orderTypes[item]" :value="item"/>
       </el-select>
       <span class="filter-label">流水用户：</span>
       <el-input
-        v-model="listQuery.id"
+        v-model="listQuery.transaction_object_login_id"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -113,8 +113,8 @@
         listQuery: {
           page: 1,
           pageSize: 10,
-          id: undefined,
-          flowType: undefined,
+          transaction_object_login_id: undefined,
+          transaction_type: undefined,
           date: [],
           start: undefined,
           end: undefined
@@ -161,8 +161,8 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          id: undefined,
-          flowType: undefined,
+          transaction_object_login_id: undefined,
+          transaction_type: undefined,
           date: [],
           start: undefined,
           end: undefined

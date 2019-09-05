@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" id="agent-list">
     <div class="filter-container">
       <span class="filter-label">用户名称：</span>
       <el-input
@@ -10,7 +10,7 @@
       />
       <span class="filter-label">登录账号：</span>
       <el-input
-        v-model="listQuery.id"
+        v-model="listQuery.login_id"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -63,11 +63,11 @@
           <span>{{ scope.row.login_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="登录密码">
+<!--      <el-table-column label="登录密码">
         <template slot-scope="scope">
           <span>{{ scope.row.login_password }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="余额" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.balance }}</span>
@@ -98,21 +98,21 @@
           <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="280" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
+          <el-button type="primary" size="mini" @click="handleRecharge(row)">
+            账户充值
           </el-button>
           <el-button
             size="mini"
             type="warning"
-            @click="handleDetail(row)"
+            @click="handleChange(row)"
           >
-            详情
+            调整等级
           </el-button>
-<!--          <el-button size="mini" type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>-->
+          <el-button size="mini" type="danger" @click="handleReset(row)">
+            重置密码
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -175,6 +175,53 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="账户充值" :visible.sync="dialogRecharge" width="500px">
+      <el-form
+        ref="chargeForm"
+        :rules="rules"
+        :model="chargeForm"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-form-item label="充值金额：" prop="balance">
+          <el-input-number v-model.number="chargeForm.balance" controls-position="right" :precision="2" :min="0"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updateRecharge()">
+          确定
+        </el-button>
+        <el-button @click="dialogRecharge = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="调整等级" :visible.sync="dialogChange" width="500px">
+      <el-form
+        ref="levelForm"
+        :rules="rules"
+        :model="levelForm"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-form-item label="用户等级：" prop="level_id">
+          <el-select v-model="levelForm.level_id" style="width: 120px">
+            <el-option v-for="level in levelList" :key="level.level_id" :label="level.name"
+                       :value="level.level_id"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updateLevel()">
+          确定
+        </el-button>
+        <el-button @click="dialogChange = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="详情" :visible.sync="dialogReadVisible" :footer="null" width="500px">
       <el-form
         ref="dataForm"
@@ -212,6 +259,7 @@
 <script>
   import {fetchAgentList, fetchAgent, createAgent, updateAgent} from '@/api/agent'
   import {fetchLevelList} from '@/api/level'
+  import {resetPass} from '@/api/user'
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -259,7 +307,15 @@
         },
         downloadLoading: false,
         dialogReadVisible: false,
-        levelList: []
+        levelList: [],
+        dialogRecharge: false,
+        dialogChange: false,
+        chargeForm: {
+          recharge_amount: '',
+        },
+        levelForm: {
+          level_id: undefined,
+        }
       }
     },
     created() {
@@ -367,6 +423,67 @@
           }
         })
       },
+      handleRecharge(row) {
+        this.chargeForm = Object.assign({}, row); // copy obj
+        this.dialogRecharge = true;
+        this.$nextTick(() => {
+          this.$refs['chargeForm'].clearValidate()
+        })
+      },
+      updateRecharge() {
+        this.$refs['chargeForm'].validate((valid) => {
+          if (valid) {
+            updateAgent({
+              agent_id: this.chargeForm.agent_id,
+              balance: this.chargeForm.balance
+            }).then(() => {
+              this.dialogRecharge = false;
+              this.$message({
+                message: '更新成功',
+                type: 'success'
+              });
+              this.getList();
+            })
+          }
+        })
+      },
+      handleChange(row) {
+        this.levelForm = Object.assign({}, row); // copy obj
+        this.dialogChange = true;
+        this.$nextTick(() => {
+          this.$refs['levelForm'].clearValidate()
+        })
+      },
+      updateLevel() {
+        this.$refs['levelForm'].validate((valid) => {
+          if (valid) {
+            updateAgent({
+              agent_id: this.levelForm.agent_id,
+              level_id: this.levelForm.level_id
+            }).then(() => {
+              this.dialogChange = false;
+              this.$message({
+                message: '更新成功',
+                type: 'success'
+              });
+              this.getList();
+            })
+          }
+        })
+      },
+      handleReset(row) {
+        resetPass({
+          agent_id: row.agent_id,
+          old_password: row.login_password,
+          new_password: '123456'
+        }).then(() => {
+          this.$message({
+            message: '重置密码成功',
+            type: 'success'
+          });
+          this.getList();
+        })
+      },
       handleDetail(row) {
         /*fetchAgent(row.id).then(response => {
           this.temp = response.data.pvData
@@ -413,5 +530,10 @@
     color: #889aa4;
     cursor: pointer;
     user-select: none;
+  }
+  #agent-list {
+    /deep/.fixed-width .el-button--mini {
+      width: 70px;
+    }
   }
 </style>

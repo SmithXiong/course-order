@@ -41,17 +41,22 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="等级名称" width="150px">
+      <el-table-column label="等级名称" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级昵称" width="150px">
+      <el-table-column label="等级昵称" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.nickname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="首次充值金额" width="200px">
+      <el-table-column label="等级序号" width="120px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.level_number }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="首次充值金额" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.first_recharge }}</span>
         </template>
@@ -110,6 +115,9 @@
         </el-form-item>
         <el-form-item label="等级昵称：" prop="nickname">
           <el-input v-model="temp.nickname"/>
+        </el-form-item>
+        <el-form-item label="等级序号：" prop="level_number">
+          <el-input-number v-model.number="temp.level_number" controls-position="right" :precision="0" :min="0"/>
         </el-form-item>
         <el-form-item label="⾸次充值⾦额：" prop="first_recharge">
           <el-input-number v-model.number="temp.first_recharge" controls-position="right" :precision="2" :min="0"/>
@@ -198,6 +206,7 @@
         temp: {
           name: '',
           nickname: '',
+          level_number: undefined,
           first_recharge: undefined,
           refill_discount: undefined,
           commission: undefined,
@@ -213,6 +222,7 @@
         rules: {
           name: [{required: true, message: '请输入等级名称', trigger: 'blur'}],
           nickname: [{required: true, message: '请输入等级昵称', trigger: 'blur'}],
+          level_number: [{required: true, message: '请输入等级序号', trigger: 'blur'}],
           first_recharge: [{required: true, message: '请输入⾸次充值⾦额', trigger: 'blur'}],
           refill_discount: [{required: true, message: '请输入充值折扣率', trigger: 'blur'}],
           commission: [{required: true, message: '请输入下级返佣', trigger: 'blur'}],
@@ -254,6 +264,7 @@
         this.temp = {
           name: '',
           nickname: '',
+          level_number: undefined,
           first_recharge: undefined,
           refill_discount: undefined,
           commission: undefined,
@@ -288,6 +299,7 @@
           level_id,
           name,
           nickname,
+          level_number,
           first_recharge,
           refill_discount,
           commission,
@@ -298,6 +310,7 @@
           level_id,
           name,
           nickname,
+          level_number,
           first_recharge,
           refill_discount,
           commission,

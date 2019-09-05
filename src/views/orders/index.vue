@@ -1,35 +1,39 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <span class="filter-label">登录账号：</span>
+      <span class="filter-label">订单账户：</span>
       <el-input
-        v-model="listQuery.id"
+        v-model="listQuery.user_name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <span class="filter-label">平台名：</span>
+      <span class="filter-label">平台名称：</span>
       <el-input
-        v-model="listQuery.platformName"
+        v-model="listQuery.course_platform_name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <span class="filter-label">课程名：</span>
       <el-input
-        v-model="listQuery.courseName"
+        v-model="listQuery.course_name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <span class="filter-label">下单用户名：</span>
       <el-input
-        v-model="listQuery.nickName"
+        v-model="listQuery.creator_login_id"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <br>
+      <span class="filter-label">订单类型：</span>
+      <el-select v-model="listQuery.order_type" placeholder="所有" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in Object.keys(typeList)" :key="item" :label="typeList[item]" :value="item"/>
+      </el-select>
       <span class="filter-label">订单时间：</span>
       <el-date-picker
         class="filter-item"
@@ -94,9 +98,14 @@
           <span>{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户密码" width="150px">
+      <el-table-column label="用户昵称" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.password }}</span>
+          <span>{{ scope.row.creator_login_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台名称" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.course_platform_name }}</span>
         </template>
       </el-table-column>
 <!--      <el-table-column label="用户昵称" width="120px">
@@ -193,13 +202,19 @@
         listQuery: {
           page: 1,
           pageSize: 10,
-          id: undefined,
-          platformName: undefined,
-          courseName: undefined,
-          nickName: undefined,
+          user_name: undefined,
+          course_platform_name: undefined,
+          course_name: undefined,
+          creator_login_id: undefined,
+          order_type: undefined,
           date: [],
           start: undefined,
           end: undefined
+        },
+        typeList: {
+          '1': '整本',
+          '2': '单元',
+          '3': '考试'
         },
         statusList: {
           '1': '已完成',
@@ -248,10 +263,11 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          id: undefined,
-          platformName: undefined,
-          courseName: undefined,
-          nickName: undefined,
+          user_name: undefined,
+          course_platform_name: undefined,
+          course_name: undefined,
+          creator_login_id: undefined,
+          order_type: undefined,
           date: [],
           start: undefined,
           end: undefined

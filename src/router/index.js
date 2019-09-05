@@ -74,6 +74,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/index'),
+        name: 'User',
+        meta: {
+          title: '用户手册',
+          icon: 'notebook-1',
+          noCache: true
+        }
+      }]
+  },
+  {
     path: '/course',
     component: Layout,
     redirect: '/course/index',

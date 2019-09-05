@@ -1,5 +1,5 @@
 module.exports = {
-  title: '小白代理',
+  title: '微代做2.0',
 
   /**
    * @type {boolean} true | false

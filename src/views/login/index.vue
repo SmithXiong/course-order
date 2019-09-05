@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">小白代理</h3>
+        <h3 class="title">微代做2.0</h3>
       </div>
 
       <el-form-item prop="username">
