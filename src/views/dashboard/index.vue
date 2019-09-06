@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="6">
         <el-card header="我的余额" :body-style="{padding:'15px'}">
-          <span class="card-info">{{userInfo.balance || 0}}</span>
+          <span class="card-info">{{userInfo.balance.toFixed(2) || 0}}</span>
         </el-card>
       </el-col>
       <el-col :span="6">

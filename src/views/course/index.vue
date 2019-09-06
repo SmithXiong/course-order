@@ -27,17 +27,19 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="平台名称" width="150px">
+      <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button type="primary" size="mini" style="width: auto;" @click="handleOrder(row)">
+            立即下单
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台名称" width="200px">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台公告">
-        <template slot-scope="scope">
-          <span v-html="scope.row.announcement">{{ scope.row.announcement }}</span>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="课程单价" width="80px">
+      <el-table-column label="课程单价" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.coursePrice }}</span>
         </template>
@@ -46,12 +48,10 @@
         <template slot-scope="scope">
           <span>{{ scope.row.unitPrice }}</span>
         </template>
-      </el-table-column>-->
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="mini" style="width: auto;" @click="handleOrder(row)">
-            立即下单
-          </el-button>
+      </el-table-column>
+      <el-table-column label="平台公告">
+        <template slot-scope="scope">
+          <span v-html="scope.row.announcement">{{ scope.row.announcement }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -64,6 +64,7 @@
   import {fetchPlatformList} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'Course',
@@ -81,6 +82,11 @@
         }
       }
     },
+    computed: {
+      ...mapGetters([
+        'userInfo'
+      ])
+    },
     created() {
       this.getList()
     },
@@ -91,7 +97,24 @@
       getList() {
         this.listLoading = true;
         fetchPlatformList(this.listQuery).then(response => {
-          this.list = response.data.list;
+          let list = response.data.list;
+          list = list.map(o => {
+            let index = o.price.findIndex(m => m.level_id === this.userInfo.level_id);
+            if (index !== -1) {
+              return {
+                ...o,
+                coursePrice: o.price[index].course_price || '无',
+                unitPrice: o.price[index].unit_price || '无'
+              }
+            } else {
+              return {
+                ...o,
+                coursePrice: '无',
+                unitPrice: '无'
+              }
+            }
+          });
+          this.list = list;
           this.total = response.data.total;
           this.listLoading = false;
         })

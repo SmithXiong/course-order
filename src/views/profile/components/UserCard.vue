@@ -51,7 +51,7 @@
         </el-col>
       </el-row>
       <el-divider></el-divider>
-      <el-row type="flex" justify="space-between" align="center">
+<!--      <el-row type="flex" justify="space-between" align="center">
         <el-col :span="8">
           <i class="el-icon-user-solid"></i>
           <span class="user-info-title">用户角色：</span>
@@ -60,7 +60,7 @@
           <span class="user-info-content">{{user.role}}</span>
         </el-col>
       </el-row>
-      <el-divider></el-divider>
+      <el-divider></el-divider>-->
     </div>
   </el-card>
 </template>

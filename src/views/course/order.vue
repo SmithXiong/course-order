@@ -16,11 +16,11 @@
             label-position="left"
           >
             <el-form-item prop="accounts">
-              <el-input v-model="temp.accounts" :autosize="{ minRows: 5, maxRows: 8}" type="textarea"/>
+              <el-input v-model="temp.accounts" :autosize="{ minRows: 10, maxRows: 10}" type="textarea"/>
             </el-form-item>
             <el-form-item>
               <i class="el-icon-s-promotion"></i>
-              <p class="course-notice">请注意：下单格式修改为《账号 空格 密码》，多个请换行；</p>
+              <p class="course-notice">请注意：下单格式为===账号 空格 密码，批量下单目前开放个数为10个账号；</p>
             </el-form-item>
 <!--            <el-form-item label-width="95px" label="下单类型：" prop="orderType">
               <el-select v-model="temp.orderType" placeholder="请选择">
@@ -82,6 +82,8 @@
         let list = value.trim().split(/[\r\n]/),isError = false;
         if (list.length === 0) {
           callback(new Error('请输入账号密码'));
+        } else if (list.length > 10) {
+          callback(new Error('批量下单最多支持10个账号'));
         } else {
           for(let item of list) {
             let length = item.trim().split(/\s+/).length;
@@ -184,13 +186,13 @@
             console.log(data)
             fetchCourse(data).then(response => {
               let data = response.data || [];
-              data = data.filter(o => o.code === 1);
+              //data = data.filter(o => o.code == 1);
               data = data.map(o => {
                 return {
                   id: uuid(),
-                  label: o.account + '   ' + o.password,
+                  label: o.account + '   ' + o.password + '   ' + (o.code != 1 ? o.msg : ''),
                   type: 'parent',
-                  children: o.course.map(m => {
+                  children: o.course && o.course.map(m => {
                     return {
                       id: m.id,
                       label: m.name,
@@ -220,14 +222,14 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             let treeData = this.$refs.courseTree.getCheckedNodes().concat(this.$refs.courseTree.getHalfCheckedNodes());
-            console.log(this.$refs.courseTree);
-            if (treeData.length === 0) {
+            console.log(treeData);
+            let courses = treeData.filter(o => o.type === 'course');
+            if (courses.length === 0) {
               return this.$message({
                 message: '请选择课程',
                 type: 'warning'
               });
             }
-            let courses = treeData.filter(o => o.type === 'course');
             let units = treeData.filter(o => o.type === 'unit');
             courses = courses.map(o => {
               let unit = units.filter(m => m.parent === o.id).map(n => ({

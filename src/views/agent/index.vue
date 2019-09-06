@@ -70,7 +70,7 @@
       </el-table-column>-->
       <el-table-column label="余额" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.balance }}</span>
+          <span>{{ scope.row.balance.toFixed(2) }}</span>
         </template>
       </el-table-column>
 <!--      <el-table-column label="备注">

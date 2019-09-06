@@ -93,12 +93,17 @@
           <span>{{ scope.row.order_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户账号" width="150px">
+      <el-table-column label="账号" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" width="150px">
+      <el-table-column label="密码" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.password }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下单人" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.creator_login_id }}</span>
         </template>
@@ -125,7 +130,7 @@
       </el-table-column>
       <el-table-column label="花费" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
+          <span>{{ scope.row.price.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="160px">

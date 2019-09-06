@@ -49,11 +49,11 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="订单号" width="180px">
+<!--      <el-table-column label="订单号" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.order_id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="流水类型" width="180px">
         <template slot-scope="scope">
           <span>{{ orderTypes[scope.row.transaction_type] }}</span>
@@ -76,12 +76,17 @@
       </el-table-column>
       <el-table-column label="操作前余额" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.pre_operation_balance }}</span>
+          <span>{{ scope.row.pre_operation_balance.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作后余额" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.after_operation_balance }}</span>
+          <span>{{ scope.row.after_operation_balance.toFixed(2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作金额" width="180px">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.after_operation_balance - scope.row.pre_operation_balance).toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="流水时间" >
