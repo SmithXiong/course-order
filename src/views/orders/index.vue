@@ -9,12 +9,15 @@
         @keyup.enter.native="handleFilter"
       />
       <span class="filter-label">平台名称：</span>
-      <el-input
+      <el-select v-model="listQuery.course_platform_name" placeholder="所有" clearable style="width: 180px" class="filter-item">
+        <el-option v-for="item in platformList" :key="item.course_platform_id" :label="item.name" :value="item.name"/>
+      </el-select>
+      <!--<el-input
         v-model="listQuery.course_platform_name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
-      />
+      />-->
       <span class="filter-label">课程名：</span>
       <el-input
         v-model="listQuery.course_name"
@@ -88,11 +91,11 @@
         type="selection"
         width="40px">
       </el-table-column>
-      <el-table-column label="订单号" width="180px">
+<!--      <el-table-column label="订单号" width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.order_id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="账号" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.user_name }}</span>
@@ -125,7 +128,7 @@
       </el-table-column>
       <el-table-column label="下单类型" width="120px">
         <template slot-scope="scope">
-          <span>{{ scope.row.order_type === '1' ? '整本' : scope.row.order_type === '2' ? '单元' : '考试' }}</span>
+          <el-tag size="mini" effect="dark" :color="statusColor[scope.row.order_type]">{{ typeList[scope.row.order_type] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="花费" width="80px">
@@ -140,10 +143,10 @@
       </el-table-column>
       <el-table-column label="状态" width="120px">
         <template slot-scope="scope">
-          <span>{{ statusList[scope.row.status] }}</span>
+          <el-tag size="mini" effect="dark" :color="statusColor[scope.row.status]">{{ statusList[scope.row.status] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="userInfo.role==='admin'" label="操作" align="center" width="160px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="140px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
@@ -151,6 +154,7 @@
           <el-button
             size="mini"
             type="warning"
+            v-if="['1','5','6'].includes(row.status)"
             @click="handleReset(row)"
           >
             重做
@@ -185,11 +189,35 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="修改密码" :visible.sync="dialogPassVisible" width="400px">
+      <el-form
+        ref="passForm"
+        :model="passForm"
+        label-position="left"
+        label-width="120px"
+        style="width: 300px; margin-left:30px;"
+      >
+        <el-form-item label="密码：" label-width="100" :rules="{
+      required: true, message: '请输入密码', trigger: 'blur'
+    }">
+          <el-input v-model="passForm.password" style="width: 150px" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updatePass()">
+          确定
+        </el-button>
+        <el-button @click="dialogPassVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import {fetchOrderList,fetchOrder,createOrder,updateOrder} from '@/api/orders'
+  import {fetchOrderList,fetchOrder,patchOrder,updateOrder} from '@/api/orders'
+  import {fetchPlatformList} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -221,12 +249,26 @@
           '2': '单元',
           '3': '考试'
         },
+        typeColor: {
+          '1': '#1890ff',
+          '2': '#FFBA00',
+          '3': '#67c23a'
+        },
         statusList: {
           '1': '已完成',
           '2': '排队中',
           '3': '执⾏中',
           '4': '待考试',
-          '5': '密码错误'
+          '5': '密码错误',
+          '6': '失败'
+        },
+        statusColor: {
+          '1': '#409EFF',
+          '2': '#ff8c00',
+          '3': '#67c23a',
+          '4': '#E6A23C',
+          '5': '#F56C6C',
+          '6': '#909399',
         },
         tableSelection: [],
         statusLoading: false,
@@ -234,10 +276,16 @@
         temp: {
           status: undefined
         },
-        dialogFormVisible: false
+        dialogFormVisible: false,
+        dialogPassVisible: false,
+        passForm: {
+          password: undefined
+        },
+        platformList: []
       }
     },
     created() {
+      this.getPlatformList();
       this.getList()
     },
     computed: {
@@ -246,6 +294,15 @@
       ])
     },
     methods: {
+      getPlatformList() {
+        let params = {
+          page: 1,
+          pageSize: 100,
+        };
+        fetchPlatformList(params).then(response => {
+          this.platformList = response.data.list;
+        })
+      },
       getList() {
         this.listLoading = true;
         let params = {...this.listQuery};
@@ -303,7 +360,7 @@
                 order_id: this.tableSelection.map(o => o.order_id)
               }
             };
-            updateOrder(data).then(res => {
+            patchOrder(data).then(res => {
               this.$message({
                 message: '修改成功',
                 type: 'success'
@@ -316,14 +373,42 @@
         })
       },
       handleUpdate(row) {
-        this.temp.status = undefined;
-        this.dialogFormVisible = true;
+        this.passForm.password = undefined;
+        this.dialogPassVisible = true;
+        this.$refs.orderTable.clearSelection();
         this.$refs.orderTable.toggleRowSelection(row);
       },
+      updatePass() {
+        this.$refs['passForm'].validate((valid) => {
+          if (valid) {
+            let data = {
+              password: this.passForm.password,
+              order_id: this.tableSelection[0].order_id
+            };
+            updateOrder(data).then(res => {
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
+              this.dialogPassVisible = false;
+              this.$refs.orderTable.clearSelection();
+              this.getList()
+            })
+          }
+        })
+      },
       handleReset(row) {
-        this.temp.status = undefined;
-        this.dialogFormVisible = true;
-        this.$refs.orderTable.toggleRowSelection(row);
+        let data = {
+          status: '2',
+          order_id: row.order_id
+        };
+        updateOrder(data).then(res => {
+          this.$message({
+            message: '重做成功',
+            type: 'success'
+          });
+          this.getList()
+        })
       },
       handleDownload() {
         if(this.tableSelection.length === 0) {

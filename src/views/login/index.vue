@@ -58,27 +58,44 @@
         </div>
       </div>-->
     </el-form>
+    <el-dialog title="修改密码" :visible.sync="dialogPassVisible" width="500px">
+      <el-form ref="passForm" :model="passForm" :rules="passRules" label-width="100px" label-position="left"
+               style="width: 400px; margin-left:30px;">
+        <el-form-item label="旧密码：" prop="oldPass">
+          <el-input v-model.trim="passForm.oldPass" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="新密码：" prop="pass">
+          <el-input type="password" v-model.trim="passForm.pass" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" prop="checkPass">
+          <el-input type="password" v-model.trim="passForm.checkPass" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updatePass()">
+          确定
+        </el-button>
+        <el-button @click="dialogPassVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {resetPass} from '@/api/user'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
+    const validateCheckPass = (rule, value, callback) => {
       if (!value.trim()) {
-        callback(new Error('请输入用户名'))
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.passForm.pass) {
+        callback(new Error('两次输入密码不一致!'));
       } else {
-        callback()
-      }
-    };
-    const validatePassword = (rule, value, callback) => {
-      if (!value.trim()) {
-        callback(new Error('请输入密码'))
-      } else {
-        callback()
+        callback();
       }
     };
     return {
@@ -87,8 +104,8 @@ export default {
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
+        password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -96,7 +113,18 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      loginBg: '/media/home.jpg'
+      loginBg: '/media/home.jpg',
+      dialogPassVisible: false,
+      passForm: {
+        oldPass: '',
+        pass: '',
+        checkPass: ''
+      },
+      passRules: {
+        oldPass: [{required: true, trigger: 'blur', message: '请输入旧密码'}],
+        pass: [{required: true, trigger: 'blur', message: '请输入密码'}],
+        checkPass: [{required: true, trigger: 'blur', validator: validateCheckPass}],
+      }
     }
   },
   watch: {
@@ -153,7 +181,20 @@ export default {
           this.loading = true;
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: '/' });
+              //this.$router.push({ path: '/' });
+              if (this.loginForm.password === '123456') {
+                this.passForm = {
+                  oldPass: '',
+                  pass: '',
+                  checkPass: ''
+                };
+                this.dialogPassVisible = true;
+                this.$nextTick(() => {
+                  this.$refs['passForm'].clearValidate()
+                })
+              } else {
+                this.$router.push({ path: '/' });
+              }
               this.loading = false
             })
             .catch(() => {
@@ -169,6 +210,25 @@ export default {
         }
         return acc
       }, {})
+    },
+    updatePass() {
+      this.$refs['passForm'].validate((valid) => {
+        if (valid) {
+          let data = {
+            agent_id: '',
+            old_password: this.passForm.oldPass,
+            new_password: this.passForm.checkPass
+          };
+          resetPass(data).then(res => {
+            this.$message({
+              message: '修改密码成功',
+              type: 'success'
+            });
+            this.$store.dispatch('user/resetToken');
+            this.dialogPassVisible = false;
+          })
+        }
+      })
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -201,13 +261,13 @@ $light_gray:#fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
+  .login-form .el-input input {
     color: $cursor;
   }
 }
 
 /* reset element-ui css */
-.login-container {
+.login-form {
   .el-input {
     display: inline-block;
     height: 47px;

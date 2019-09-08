@@ -3,7 +3,7 @@
     <div class="filter-container">
       <span class="filter-label">账号：</span>
       <el-input
-        v-model="listQuery.name"
+        v-model="listQuery.login_id"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -22,14 +22,24 @@
       fit
       style="width: 100%;"
     >
-      <el-table-column label="登录账号">
+      <el-table-column label="登录账号" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.login_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称">
+      <el-table-column label="账户余额" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.nickName }}</span>
+          <span>{{ scope.row.balance }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单数" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.order_count }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="IP" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ip }}</span>
         </template>
       </el-table-column>
       <el-table-column label="浏览器">
@@ -37,9 +47,9 @@
           <span>{{ scope.row.browser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP">
+      <el-table-column label="状态" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.address }}</span>
+          <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
@@ -52,45 +62,52 @@
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize"
                 @pagination="getList"/>
-    <el-dialog title="详情" :visible.sync="dialogVisible" :footer="null" width="600px">
-      <el-form
-        ref="dataForm"
-        :model="temp"
-        label-position="left"
-        label-width="120px"
-        style="width: 500px; margin-left:50px;"
+    <el-dialog title="历史登录记录" :visible.sync="dialogVisible" :footer="null" width="1000px">
+      <el-table
+        v-loading="historyLoading"
+        :data="historyList"
+        border
+        fit
+        style="width: 100%;"
       >
-        <el-form-item label="登录账号：">
-          {{temp.name || ''}}
-        </el-form-item>
-        <el-form-item label="用户昵称：">
-          {{temp.nickName || ''}}
-        </el-form-item>
-        <el-form-item label="浏览器：">
-          {{temp.browser || ''}}
-        </el-form-item>
-        <el-form-item label="登录IP：">
-          {{temp.address || ''}}
-        </el-form-item>
-        <el-form-item label="历史登录：">
-          {{temp.loginHistory | parseTime}}
-        </el-form-item>
-        <el-form-item label="最后登录：">
-          {{temp.lastLogin | parseTime}}
-        </el-form-item>
-        <el-form-item label="账户余额：">
-          {{temp.balance || ''}}
-        </el-form-item>
-        <el-form-item label="订单数：">
-          {{temp.orderNum || ''}}
-        </el-form-item>
-      </el-form>
+        <el-table-column label="登录账号" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.login_id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="账户余额" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.balance }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="订单数" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.order_count }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="IP" width="180">
+          <template slot-scope="scope">
+            <span>{{ scope.row.ip }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="浏览器">
+          <template slot-scope="scope">
+            <span>{{ scope.row.browser }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination v-show="historyTotal>0" :total="historyTotal" :page.sync="historyQuery.page" :limit.sync="historyQuery.pageSize" @pagination="getHistory"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {fetchList, fetchOnlineUser} from '@/api/online'
+  import {fetchOnlineList, fetchOnlineUser} from '@/api/online'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -106,10 +123,18 @@
         listQuery: {
           page: 1,
           pageSize: 10,
-          name: undefined,
+          login_id: undefined,
         },
         dialogVisible: false,
-        temp: {}
+        temp: {},
+        historyLoading: false,
+        historyList: false,
+        historyTotal: 0,
+        historyQuery: {
+          page: 1,
+          pageSize: 10
+        },
+        currentAgent: ''
       }
     },
     created() {
@@ -121,14 +146,10 @@
     methods: {
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchOnlineList(this.listQuery).then(response => {
           this.list = response.data.list;
-          this.total = response.data.pageInfo.total;
-
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          this.total = response.data.total;
+          this.listLoading = false;
         })
       },
       handleFilter() {
@@ -139,17 +160,29 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          name: undefined
+          login_id: undefined
         };
         this.getList()
       },
       //详情
       handleDetail(row) {
-        fetchOnlineUser(row.id).then(response => {
-          this.temp = Object.assign({}, response.data);
-          this.dialogVisible = true;
-        })
+        this.dialogVisible = true;
+        this.historyQuery.page = 1;
+        this.historyQuery.pageSize = 10;
+        this.currentAgent = row.agent_id;
       },
+      getHistory() {
+        this.historyLoading = true;
+        let params = {
+          ...this.historyQuery,
+          id: this.currentAgent
+        };
+        fetchOnlineUser(params).then(response => {
+          this.historyList = response.data.list;
+          this.historyTotal = response.data.total;
+          this.historyLoading = false;
+        })
+      }
     }
   }
 </script>

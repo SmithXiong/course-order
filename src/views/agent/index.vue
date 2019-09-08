@@ -68,26 +68,26 @@
           <span>{{ scope.row.login_password }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="余额" width="80px">
+      <el-table-column label="余额" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.balance.toFixed(2) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="备注">
+      <el-table-column label="订单数" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.remarks }}</span>
-        </template>
-      </el-table-column>-->
-<!--      <el-table-column label="等级" width="80px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.level_id }}</span>
+          <span>{{ scope.row.order_count }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上级代理" width="120px">
+      <el-table-column label="等级" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.creator_id }}</span>
+          <span>{{ scope.row.level_nickname }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
+      <el-table-column label="上级代理" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.creator_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" width="80px">
         <template slot-scope="scope">
           <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
@@ -530,10 +530,5 @@
     color: #889aa4;
     cursor: pointer;
     user-select: none;
-  }
-  #agent-list {
-    /deep/.fixed-width .el-button--mini {
-      width: 70px;
-    }
   }
 </style>

@@ -77,7 +77,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          pageSize: 10,
+          pageSize: 30,
           name: undefined,
         }
       }
@@ -126,7 +126,7 @@
       resetFilter() {
         this.listQuery = {
           page: 1,
-          pageSize: 10,
+          pageSize: 30,
           name: undefined
         };
         this.getList()

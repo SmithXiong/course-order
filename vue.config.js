@@ -48,7 +48,7 @@ module.exports = {
         }
       }*/
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://192.168.11.206:8000`,
+        target: `http://111.67.201.57:7000`,
         changeOrigin: true,
       }
     },

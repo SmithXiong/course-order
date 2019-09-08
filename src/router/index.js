@@ -250,6 +250,14 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'online',
+        component: () => import('@/views/backend/online/index'),
+        name: 'Online',
+        meta: {
+          title: '在线用户'
+        }
+      },
+      {
         path: 'banner',
         component: () => import('@/views/backend/banner/index'),
         name: 'Banner',
@@ -258,14 +266,6 @@ export const asyncRoutes = [
           noCache: true
         }
       },
-/*      {
-        path: 'online',
-        component: () => import('@/views/backend/online/index'),
-        name: 'Online',
-        meta: {
-          title: '在线用户'
-        }
-      },*/
 /*      {
         path: 'directive',
         component: () => import('@/views/permission/directive'),

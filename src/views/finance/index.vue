@@ -7,7 +7,7 @@
       </el-select>
       <span class="filter-label">流水用户：</span>
       <el-input
-        v-model="listQuery.transaction_object_login_id"
+        v-model="listQuery.transaction_object_name"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -56,7 +56,7 @@
       </el-table-column>-->
       <el-table-column label="流水类型" width="180px">
         <template slot-scope="scope">
-          <span>{{ orderTypes[scope.row.transaction_type] }}</span>
+          <el-tag size="mini" effect="dark" :color="orderColor[scope.row.transaction_type]">{{ orderTypes[scope.row.transaction_type] }}</el-tag>
         </template>
       </el-table-column>
 <!--      <el-table-column label="流水信息">
@@ -69,9 +69,9 @@
           <span>{{ scope.row.transaction_object_login_nickname }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="用户账号" width="180px">
+      <el-table-column label="流水用户" width="180px">
         <template slot-scope="scope">
-          <span>{{ scope.row.transaction_object_login_id }}</span>
+          <span>{{ scope.row.transaction_object_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作前余额" width="180px">
@@ -118,7 +118,7 @@
         listQuery: {
           page: 1,
           pageSize: 10,
-          transaction_object_login_id: undefined,
+          transaction_object_name: undefined,
           transaction_type: undefined,
           date: [],
           start: undefined,
@@ -133,6 +133,15 @@
           '5': '开户⽀出',
           '6': '充值折扣',
           '7': '下级充值',
+        },
+        orderColor: {
+          '1': '#409EFF',
+          '2': '#909399',
+          '3': '#67c23a',
+          '4': '#E6A23C',
+          '5': '#F56C6C',
+          '6': '#ff8c00',
+          '7': '#00ced1',
         },
         downloadLoading: false
       }
@@ -166,7 +175,7 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          transaction_object_login_id: undefined,
+          transaction_object_name: undefined,
           transaction_type: undefined,
           date: [],
           start: undefined,

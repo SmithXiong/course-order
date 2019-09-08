@@ -23,10 +23,18 @@ export function createOrder(data) {
   })
 }
 
-export function updateOrder(data) {
+export function patchOrder(data) {
   return request({
     url: `/order/`,
     method: 'patch',
+    data
+  })
+}
+
+export function updateOrder(data) {
+  return request({
+    url: `/order/${data.order_id}/`,
+    method: 'put',
     data
   })
 }

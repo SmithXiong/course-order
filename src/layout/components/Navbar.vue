@@ -11,8 +11,8 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
         <div class="avatar-wrapper">
-          <svg-icon icon-class="profile" class="user-avatar"/>
-          <!--<img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
+          <!--<svg-icon icon-class="profile" class="user-avatar"/>-->
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -33,6 +33,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
+import avatar from '@/assets/images/avatar.png'
 
 export default {
   components: {
@@ -43,9 +44,13 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
       'device'
     ])
+  },
+  data() {
+    return {
+      avatar: avatar + '?' + +new Date()
+    }
   },
   methods: {
     toggleSideBar() {

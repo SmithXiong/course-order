@@ -4,7 +4,7 @@
       <div class="box-center">
         <!--<pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
         </pan-thumb>-->
-        <svg-icon icon-class="profile" style="width: 100px;height: 100px;" />
+        <img :src="avatar" width="100" height="100" alt="avatar">
       </div>
 <!--      <div class="box-center">
         <el-button type="primary" class="text-center" @click="imagecropperShow=true">修改头像</el-button>
@@ -68,6 +68,7 @@
 <script>
   import ImageCropper from '@/components/ImageCropper'
   import PanThumb from '@/components/PanThumb'
+  import avatar from '@/assets/images/avatar.png'
 
   export default {
     components: {ImageCropper, PanThumb},
@@ -88,6 +89,7 @@
       return {
         imagecropperShow: false,
         imagecropperKey: 0,
+        avatar: avatar + '?' + +new Date()
       }
     },
     methods: {

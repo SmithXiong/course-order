@@ -77,3 +77,16 @@
 .el-range-editor.el-input__inner {
   display: inline-flex !important;
 }
+
+.el-tag--dark {
+  border-color: transparent;
+}
+
+.fixed-width .el-button--mini {
+  width: auto;
+  padding: 5px 8px;
+}
+
+.el-table--medium th, .el-table--medium td {
+  padding: 7px 0;
+}
