@@ -8,6 +8,13 @@
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
+      <span class="filter-label">IP：</span>
+      <el-input
+        v-model="listQuery.ip"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -124,6 +131,7 @@
           page: 1,
           pageSize: 10,
           login_id: undefined,
+          ip: undefined,
         },
         dialogVisible: false,
         temp: {},
@@ -160,7 +168,8 @@
         this.listQuery = {
           page: 1,
           pageSize: 10,
-          login_id: undefined
+          login_id: undefined,
+          ip: undefined,
         };
         this.getList()
       },
