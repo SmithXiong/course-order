@@ -47,9 +47,9 @@
           <span>{{ scope.row.browser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="80">
+      <el-table-column label="登录时间" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+          <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
@@ -95,9 +95,9 @@
             <span>{{ scope.row.browser }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80">
+        <el-table-column label="登录时间" width="180">
           <template slot-scope="scope">
-            <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+            <span>{{ scope.row.created_at | parseTime }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -128,7 +128,7 @@
         dialogVisible: false,
         temp: {},
         historyLoading: false,
-        historyList: false,
+        historyList: [],
         historyTotal: 0,
         historyQuery: {
           page: 1,
@@ -170,6 +170,7 @@
         this.historyQuery.page = 1;
         this.historyQuery.pageSize = 10;
         this.currentAgent = row.agent_id;
+        this.getHistory();
       },
       getHistory() {
         this.historyLoading = true;
