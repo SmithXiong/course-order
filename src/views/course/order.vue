@@ -193,18 +193,21 @@
                   label: o.account + '   ' + o.password + '   ' + (o.code != 1 ? o.msg : ''),
                   type: 'parent',
                   children: o.course && o.course.map(m => {
+                    let id = uuid();
                     return {
-                      id: m.id,
+                      id: id,
+                      course_id: m.id,
                       label: m.name,
                       type: 'course',
                       account: o.account,
                       password: o.password,
                       children: m.unit && m.unit.map(n => {
                         return {
-                          id: n.id,
+                          id: uuid(),
+                          unit_id: n.id,
                           label: n.name,
                           type: 'unit',
-                          parent: m.id
+                          parent: id
                         }
                       })
                     }
@@ -233,14 +236,14 @@
             let units = treeData.filter(o => o.type === 'unit');
             courses = courses.map(o => {
               let unit = units.filter(m => m.parent === o.id).map(n => ({
-                unit_id: n.id,
+                unit_id: n.unit_id,
                 unit_name: n.label
               }));
               return {
                 user_name: o.account,
                 password: o.password,
                 course_name: o.label,
-                course_id: o.id,
+                course_id: o.course_id,
                 type: unit.length === o.children.length ? '1' : '2',
                 unit_info: unit.length === o.children.length ? [] : unit
               }

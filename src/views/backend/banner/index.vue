@@ -16,7 +16,8 @@
     name: 'Banner',
     data() {
       return {
-        url: '/media/home.jpg',
+        //url: '/media/home.jpg',
+        url: 'http://pxn8t9lvw.bkt.clouddn.com/home.jpg',
       }
     },
     created() {
@@ -37,7 +38,8 @@
           uploadFile(formData).then((res) => {
             if (res && res.data && res.data.attachment_uri) {
               //let url = process.env.VUE_APP_BACKEND + res.data.attachment_uri;
-              this.url = res.data.attachment_uri;
+              //this.url = res.data.attachment_uri;
+              this.url = 'http://pxn8t9lvw.bkt.clouddn.com/home.jpg';
             } else {
               this.$message({
                 message: '上传图片出错',

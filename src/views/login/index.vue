@@ -113,7 +113,8 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      loginBg: '/media/home.jpg',
+      //loginBg: '/media/home.jpg',
+      loginBg: 'http://pxn8t9lvw.bkt.clouddn.com/home.jpg',
       dialogPassVisible: false,
       passForm: {
         oldPass: '',
