@@ -29,7 +29,7 @@
       </el-table-column>-->
       <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" style="width: auto;" @click="handleOrder(row)">
+          <el-button type="primary" size="mini" :disabled="!(row.status)" style="width: auto;" @click="handleOrder(row)">
             立即下单
           </el-button>
         </template>
@@ -37,6 +37,12 @@
       <el-table-column label="平台名称" width="200px">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台状态" width="80px">
+        <template slot-scope="scope">
+          <el-tag size="mini" effect="dark" :color="statusColor[scope.row.status]">{{ statusList[scope.row.status] }}</el-tag>
+          <!-- <span>{{ scope.row.status }}</span> -->
         </template>
       </el-table-column>
       <el-table-column label="课程单价" width="80px">
@@ -79,7 +85,15 @@
           page: 1,
           pageSize: 30,
           name: undefined,
-        }
+        },
+        statusColor: {
+          true: '#67c23a',
+          false: '#ff8c00',
+        },
+        statusList: {
+          true: '可下单',
+          false: '维护中',
+        },
       }
     },
     computed: {

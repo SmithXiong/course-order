@@ -37,6 +37,10 @@
       <el-select v-model="listQuery.order_type" placeholder="所有" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in Object.keys(typeList)" :key="item" :label="typeList[item]" :value="item"/>
       </el-select>
+      <span class="filter-label">订单状态：</span>
+      <el-select v-model="listQuery.status" placeholder="所有" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in Object.keys(statusList)" :key="item" :label="statusList[item]" :value="item"/>
+      </el-select>
       <span class="filter-label">订单时间：</span>
       <el-date-picker
         class="filter-item"
@@ -240,6 +244,7 @@
           course_name: undefined,
           creator_login_id: undefined,
           order_type: undefined,
+          status:undefined,
           date: [],
           start: undefined,
           end: undefined
@@ -330,6 +335,7 @@
           course_name: undefined,
           creator_login_id: undefined,
           order_type: undefined,
+          status:undefined,
           date: [],
           start: undefined,
           end: undefined

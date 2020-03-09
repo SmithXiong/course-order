@@ -15,6 +15,14 @@ const name = defaultSettings.title || '微代做2.0'; // page title
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527; // dev port
 
+let BASE_URL = '/'
+switch(process.env.ENV) {
+    case 'production':
+        BASE_URL = 'https://weidaizuo.oss-cn-beijing.aliyuncs.com/'
+        break
+    default:
+        BASE_URL = '/'
+}
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -24,7 +32,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: BASE_URL,
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -48,7 +56,8 @@ module.exports = {
         }
       }*/
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://111.67.201.57:7000`,
+        // target: `http://111.67.201.57:7000`,
+        target: `http://127.0.0.1:1234`,
         changeOrigin: true,
       }
     },
