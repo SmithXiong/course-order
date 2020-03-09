@@ -93,11 +93,18 @@ export const constantRoutes = [
     path: '/course',
     component: Layout,
     redirect: '/course/index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '课堂下单',
+      icon: 's-goods',
+      noCache: true
+    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/course/index'),
         name: 'Course',
+        hidden: true,
         meta: {
           title: '课堂下单',
           icon: 's-goods',
@@ -110,7 +117,6 @@ export const constantRoutes = [
         name: 'CourseOrder',
         hidden: true,
         meta: {
-          title: '课堂下单',
           icon: 's-goods',
           noCache: true
         }

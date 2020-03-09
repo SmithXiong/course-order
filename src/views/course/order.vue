@@ -4,6 +4,7 @@
       <el-card style="width: 100%; margin-bottom: 20px" :body-style="{padding:'10px'}">
         <span class="course-title">{{`【${courseDetail.name}】`}}</span>
         <p class="course-notice">{{courseDetail.announcement}}</p>
+        <p class="course-notice" v-if="!courseDetail.status">【平台维护中】</p>
       </el-card>
     </el-row>
     <el-row :gutter="20">
@@ -13,14 +14,15 @@
             ref="dataForm"
             :rules="rules"
             :model="temp"
-            label-position="left"
+            label-position="right"
+            :disabled="!courseDetail.status"
           >
             <el-form-item prop="accounts">
               <el-input v-model="temp.accounts" :autosize="{ minRows: 10, maxRows: 10}" type="textarea"/>
             </el-form-item>
             <el-form-item>
               <i class="el-icon-s-promotion"></i>
-              <p class="course-notice">请注意：下单格式为===账号 空格 密码，批量下单目前开放个数为10个账号；</p>
+              <p class="course-notice">下单格式为：账号 空格 密码，批量下单目前开放个数为10个账号；</p>
             </el-form-item>
 <!--            <el-form-item label-width="95px" label="下单类型：" prop="orderType">
               <el-select v-model="temp.orderType" placeholder="请选择">
@@ -32,6 +34,12 @@
                 </el-option>
               </el-select>
             </el-form-item>-->
+            <el-form-item label-width="95px" label="整本价格：">
+              {{courseDetail.true_price.course_price}}
+            </el-form-item>
+            <el-form-item label-width="95px" label="单元价格：">
+              {{courseDetail.true_price.unit_price}}
+            </el-form-item>
             <el-form-item v-if="courseDetail.unit_query" label-width="95px" label="课程单元：" prop="unit">
               <el-switch
                 v-model="temp.unit"
@@ -118,7 +126,12 @@
           platform_id: '',
           name: '',
           announcement: '',
-          unit_query: false
+          unit_query: false,
+          true_price: {
+            course_price: null,
+            unit_price: null
+          },
+          status: true
         },
         options: [
           {
@@ -286,6 +299,15 @@
       padding: 12px 15px;
       font-weight: 600;
       font-size: 14px;
+    }
+    /deep/ .el-form-item {
+      margin-bottom: 5px;
+    }
+    /deep/ .el-form-item--medium .el-form-item__label {
+      line-height: 30px;
+    }
+    /deep/ .el-form-item--medium .el-form-item__content {
+      line-height: 30px;
     }
   }
 

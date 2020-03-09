@@ -1,4 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import {fetchPlatformList} from '@/api/platform'
+
+let constants = constantRoutes;
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -42,21 +45,39 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes;
-    state.routes = constantRoutes.concat(routes)
+    state.routes = constants.concat(routes)
   }
 };
 
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
-      let accessedRoutes;
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes);
-      resolve(accessedRoutes)
+      fetchPlatformList({
+        page: 1,
+        pageSize: 100
+      }).then(response => {
+        let list = response.data.list || [];
+        let platRoutes = list.map((o,i) => ({
+          path: `order/${o.course_platform_id}/${encodeURIComponent(o.name)}`,
+          component: () => import('@/views/course/order'),
+          name: `CourseOrder${i}`,
+          meta: {
+            title: o.name,
+            noCache: true
+          }
+        }));
+        let child = constants[6].children;
+        constants[6].children = child.concat(platRoutes)
+      }).finally(() => {
+        let accessedRoutes;
+        if (roles.includes('admin')) {
+          accessedRoutes = asyncRoutes || []
+        } else {
+          accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        }
+        commit('SET_ROUTES', accessedRoutes);
+        resolve(accessedRoutes)
+      })
     })
   }
 };

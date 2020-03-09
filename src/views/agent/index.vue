@@ -118,14 +118,14 @@
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize"
                 @pagination="getList"/>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="650px">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
-        label-position="left"
+        label-position="right"
         label-width="100px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 600px;"
       >
         <el-form-item label="用户名称：" prop="name">
           <el-input v-model="temp.name"/>
@@ -151,7 +151,7 @@
           <el-input-number v-model.number="temp.balance" controls-position="right" :precision="2" :min="0"/>
         </el-form-item>
         <el-form-item label="用户等级：" prop="level_id">
-          <el-select v-model="temp.level_id" style="width: 120px">
+          <el-select v-model="temp.level_id" style="width: 120px" @change="handleChangeLevel($event)">
             <el-option v-for="level in levelList" :key="level.level_id" :label="level.name"
                        :value="level.level_id"/>
           </el-select>
@@ -161,6 +161,37 @@
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="平台价格：">
+          <el-card :body-style="{padding:'5px'}">
+            <div slot="header">
+              <el-row type="flex" justify="center" align="center" :gutter="10">
+                <el-col :span="8">平台名称</el-col>
+                <el-col :span="8">整本价格</el-col>
+                <el-col :span="8">单元价格</el-col>
+              </el-row>
+            </div>
+            <el-row type="flex" justify="center" align="center" :gutter="10" v-for="(item,index) in temp.price" :key="item.course_platform_id">
+              <el-col :span="8">
+                {{temp.price[index].name}}
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label-width="0" :prop="'price.' + index + '.course_price'" :rules="{
+      required: true, message: '请输入整本价格', trigger: 'blur'
+    }">
+                  <el-input-number style="width: 100%" v-model.number="item.course_price" controls-position="right" :precision="2"
+                                   :min="item.course_min"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label-width="0" :prop="'price.' + index + '.unit_price'" :rules="{
+      required: true, message: '请输入单元价格', trigger: 'blur'
+    }">
+                  <el-input-number style="width: 100%" v-model.number="item.unit_price" controls-position="right" :precision="2" :min="item.unit_min"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
         </el-form-item>
 <!--        <el-form-item label="备注：">
           <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"/>
@@ -260,9 +291,11 @@
   import {fetchAgentList, fetchAgent, createAgent, updateAgent} from '@/api/agent'
   import {fetchLevelList} from '@/api/level'
   import {resetPass} from '@/api/user'
+  import {fetchPlatformList} from '@/api/platform'
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import _ from 'lodash'
 
   export default {
     name: 'Agent',
@@ -287,7 +320,8 @@
           level_id: undefined,
           creator_id: undefined,
           status: true,
-          remarks: ''
+          remarks: '',
+          price: []
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -315,12 +349,14 @@
         },
         levelForm: {
           level_id: undefined,
-        }
+        },
+        platformList: []
       }
     },
     created() {
       this.getList();
-      this.getLevelList()
+      this.getLevelList();
+      this.getPlatformList()
     },
     mounted() {
 
@@ -342,6 +378,47 @@
         }).then(response => {
           this.levelList = response.data.list;
         })
+      },
+      getPlatformList() {
+        fetchPlatformList({
+          page: 1,
+          pageSize: 100
+        }).then(response => {
+          let list = response.data.list;
+          this.platformList = list;
+          this.temp.price = list.map(o => ({
+            course_platform_id: o.course_platform_id,
+            name: o.name,
+            course_price: o.course_price,
+            course_min: o.course_price || 0,
+            unit_price: o.unit_price,
+            unit_min: o.unit_price || 0,
+          }));
+        })
+      },
+      handleChangeLevel(id) {
+        this.temp.price = this.platformList.map(o => {
+          let prices = o.price || [];
+          let index = prices.findIndex(p => p.level_id === id);
+          if (index !== -1) {
+            return {
+              course_platform_id: o.course_platform_id,
+              name: o.name,
+              course_price: prices[index].course_price,
+              course_min: prices[index].course_price || 0,
+              unit_price: prices[index].unit_price,
+              unit_min: prices[index].unit_price || 0,
+            }
+          }
+          return {
+            course_platform_id: o.course_platform_id,
+            name: o.name,
+            course_price: undefined,
+            course_min: 0,
+            unit_price: undefined,
+            unit_min: 0,
+          }
+        });
       },
       handleFilter() {
         this.listQuery.page = 1;
@@ -365,6 +442,7 @@
           level_id: undefined,
           creator_id: undefined,
           status: true,
+          price: this.platformList,
           remarks: ''
         }
       },
@@ -389,7 +467,13 @@
       createData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            createAgent(this.temp).then(() => {
+            let data = _.cloneDeep(this.temp);
+            data.price = data.price.map(o => ({
+              course_platform_id: o.course_platform_id,
+              course_price: o.course_price,
+              unit_price: o.unit_price
+            }));
+            createAgent(data).then(() => {
               this.dialogFormVisible = false;
               this.$message({
                 message: '新增成功',
@@ -530,5 +614,13 @@
     color: #889aa4;
     cursor: pointer;
     user-select: none;
+  }
+  /deep/ .el-card__header {
+    padding: 5px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  /deep/ .el-form-item .el-form-item {
+    margin-bottom: 20px;
   }
 </style>
