@@ -170,6 +170,38 @@ export const constantRoutes = [
         }
       }]
   },
+  {
+    path: '/benefits',
+    component: Layout,
+    redirect: '/benefits/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/empty/index'),
+        name: 'Benefits',
+        meta: {
+          title: '每日福利',
+          icon: 'present',
+          noCache: true
+        }
+      }]
+  },
+  {
+    path: '/explain',
+    component: Layout,
+    redirect: '/explain/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/empty/index'),
+        name: 'Explain',
+        meta: {
+          title: '对接说明',
+          icon: 'notebook-2',
+          noCache: true
+        }
+      }]
+  },
   /*  {
     path: '/documentation',
     component: Layout,
