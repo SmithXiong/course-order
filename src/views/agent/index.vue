@@ -98,7 +98,7 @@
           <span>{{ scope.row.created_at | parseTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="280" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="360" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleRecharge(row)">
             账户充值
@@ -112,6 +112,9 @@
           </el-button>
           <el-button size="mini" type="danger" @click="handleReset(row)">
             重置密码
+          </el-button>
+          <el-button size="mini" type="primary" @click="handleUpdate(row)">
+            编辑价格
           </el-button>
         </template>
       </el-table-column>
@@ -127,6 +130,7 @@
         label-width="100px"
         style="width: 600px;"
       >
+        <div v-show="dialogStatus === 'create'">
         <el-form-item label="用户名称：" prop="name">
           <el-input v-model="temp.name"/>
         </el-form-item>
@@ -162,6 +166,7 @@
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
+        </div>
         <el-form-item label="平台价格：">
           <el-card :body-style="{padding:'5px'}">
             <div slot="header">
@@ -486,6 +491,18 @@
       },
       handleUpdate(row) {
         this.temp = Object.assign({}, row); // copy obj
+        this.temp.price = this.temp.price.map(o => {
+          return {
+            course_platform_id: o.course_platform_id,
+            course_platform_price_id: o.course_platform_price_id,
+            agent_id: o.agent_id,
+            name: o.course_platform_name,
+            course_price: o.course_price,
+            course_min: o.course_price || 0,
+            unit_price: o.unit_price,
+            unit_min: o.unit_price || 0
+          }
+        });
         console.log(this.temp)
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
@@ -494,17 +511,24 @@
         })
       },
       updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            updateAgent(this.temp).then(() => {
-              this.dialogFormVisible = false;
-              this.$message({
-                message: '更新成功',
-                type: 'success'
-              });
-              this.getList();
-            })
-          }
+        let price = _.cloneDeep(this.temp.price);
+        price = price.map(o => ({
+          course_platform_id: o.course_platform_id,
+          course_platform_price_id: o.course_platform_price_id,
+          agent_id: o.agent_id,
+          course_price: o.course_price,
+          unit_price: o.unit_price
+        }));
+        updateAgent({
+          agent_id: this.temp.agent_id,
+          price
+        }).then(() => {
+          this.dialogFormVisible = false;
+          this.$message({
+            message: '更新成功',
+            type: 'success'
+          });
+          this.getList();
         })
       },
       handleRecharge(row) {

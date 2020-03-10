@@ -67,7 +67,7 @@ const actions = {
           }
         }));
         let child = constants[6].children;
-        constants[6].children = child.concat(platRoutes)
+        constants[6].children = [child[0],child[1],...platRoutes]
       }).finally(() => {
         let accessedRoutes;
         if (roles.includes('admin')) {
